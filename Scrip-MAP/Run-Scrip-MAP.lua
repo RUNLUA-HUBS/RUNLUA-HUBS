@@ -4,22 +4,11 @@ local LocalPlayer = Players.LocalPlayer
 
 local CurrentPlaceId = tostring(game.PlaceId)
 
-local ServerScripts = {
-    ["124216119978534"] = {
-        Name = "Ride A Pet",
-        URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/Ride%20A%20Pet/obf25.lua"
-    },
-
-    ["99906598674199"] = {
-        Name = "The Locust in MM2 [ORIGINAL]",
-        URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/The%20Locust%20in%20the%20MM2/obf25.lua"
-    },
-
+local games = {
     ["142823291"] = {
         Name = "mm2",
         URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/Mysterious%20Murder%202/obf25.txt"
     },
-
     ["100068273119174"] = {
         Name = "Clean all the Leaves",
         URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/Clean%20all%20the%20Leaves/1.1.lua"
