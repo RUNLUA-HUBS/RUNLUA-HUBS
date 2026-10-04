@@ -17,7 +17,7 @@ const rawData = [
     },
     {
         name: "RUNLUA HUB รันได้ทุกแมพ",
-        script: `loadstring(game:HttpGet("https://example.com/script3.lua"))()`,
+        script: `loadstring(game:HttpGet("https://raw.githubusercontent.com/wackshopr-tech/script-roblox-all/refs/heads/main/Main-GUI-2.lua"))()`,
         description: "สคริปต์นี้รันได้ทุกแมพ คนจำนวนมากใช้งานกัน อาจไม่ครอบคลุมทุกแมพ แต่ส่วนใหญ่ได้ครับ",
         image: "https://i.postimg.cc/gJ5zMpmB/image.png",
         maps: []
