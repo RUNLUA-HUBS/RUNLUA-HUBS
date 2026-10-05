@@ -1,3 +1,5 @@
+-- เห็นซอสนี้ อย่าได้ใจไอ้ควาย มึงดูโ๕้ดก่อน มันไม่ใช่โค้ดแฮกเกม อย่าทำตัวตลกไอ้ควยย
+
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
