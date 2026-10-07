@@ -13,7 +13,11 @@ local games = {
         ShortName = "MM2",
         URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/Mysterious%20Murder%202/obf25.txt"
     },
-
+    ["118805555015549"] = {
+        Name = "[BOSS]+1 Loot To Forge",
+        ShortName = "[BOSS]+1 Loot To Forge",
+        URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/%5BBOSS%5D%2B1%20Loot%20To%20Forge/runlua.lua"
+    },
     ["100068273119174"] = {
         Name = "Clean all the Leaves",
         ShortName = "Clean all the Leaves",
