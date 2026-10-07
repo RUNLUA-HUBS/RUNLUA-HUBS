@@ -10,6 +10,10 @@ const rawData = [
                 url: "https://www.roblox.com/th/games/142823291/Murder-Mystery-2"
             },
             {
+                name: "[BOSS]+1 Loot To Forge : ตีดาป",
+                url: "https://www.roblox.com/th/games/118805555015549/1-Loot-To-Forge"
+            },
+            {
                 name: "Clean all the Leaves : ทำความสะอาดใบทั้งหมด",
                 url: "https://www.roblox.com/th/games/92637789841354/Clean-all-the-Leaves"
             }
