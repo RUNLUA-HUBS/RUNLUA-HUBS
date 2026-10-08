@@ -1,18 +1,10 @@
-# RUNLUA HUB — Unified UI Library v2.1
+# RUNLUA HUB • UI Library
 
-> รุ่นนี้รวมฟังก์ชันจาก `V1.0.lua` เข้าไปอยู่ใน Sidebar + Scrolling UI รุ่นใหม่โดยตรง พร้อมหมวด **ตั้งค่า GUI** แบบแยกเฉพาะ, ปรับขนาด UI, ปรับฟอนต์, เปลี่ยนสี, บันทึก/โหลด/รีเซ็ต และระบบ cleanup ตอนปิด UI
+UI Library สำหรับ Roblox แบบ Sidebar + Scrolling Pages พร้อมระบบ Responsive, PC/Mobile, Notifications, Components และหมวด **ตั้งค่า GUI** แยกจากหมวดทั่วไป
 
----
+## 🚀 โหลด Library จาก GitHub
 
-## 🚀 โหลด Library จาก GitHub Raw
-
-URL หลัก:
-
-```text
-https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua
-```
-
-ตัวโหลดมาตรฐาน:
+ใช้ Loader นี้ได้เลย:
 
 ```lua
 local Library = loadstring(game:HttpGet(
@@ -20,163 +12,320 @@ local Library = loadstring(game:HttpGet(
 ))()
 ```
 
-แบบบรรทัดเดียว:
+ไฟล์หลักที่ Loader เรียกคือ:
+
+```text
+UI Library/UILibrary.lua
+```
+
+เมื่อโหลดเสร็จ Library จะถูกคืนค่ากลับมา และเก็บไว้ที่ `_G.RUNLUA_HUB` ด้วย โดย API หลักของ Library มี `CreateTab`, `CreateSection`, `CreateDivider`, `CreateToggle`, `CreateButton`, `CreateSlider`, `CreateInput`, `CreateKeybind`, `CreateDropdown`, `CreateLabel`, `CreateParagraph`, `CreatePlayerList`, `Notify`, `Show`, `Hide`, `Destroy` และ `Settings` fileciteturn6file0L2380-L2477
+
+---
+
+## ✨ ความสามารถ
+
+- Sidebar สำหรับสลับหมวด
+- Scrolling Page สำหรับแต่ละแท็บ
+- Responsive Layout สำหรับพื้นที่หน้าจอหลายขนาด
+- รองรับ PC / Mobile
+- หน้าต่างลากได้
+- ปุ่ม Logo สำหรับเปิด/ซ่อน UI
+- Animation / Hover / Notification
+- Toggle / Button / Slider / Input / Keybind / Dropdown
+- Label / Paragraph / Divider / Section
+- Player List พร้อม Avatar และการเลือกผู้เล่น
+- หมวด **ตั้งค่า GUI** แยกเป็นหมวดพิเศษ
+- ปรับขนาด UI
+- ปรับขนาดตัวอักษร
+- ปรับความหนาตัวอักษร
+- เปลี่ยนสีธีม
+- ตั้งสีด้วย HEX
+- Save / Load / Reset การตั้งค่า
+- บันทึกตำแหน่งหน้าต่างและปุ่ม Logo
+
+ระบบจัดการขนาดและตัวอักษรใช้การแยกค่าพื้นฐานของ TextSize แล้วคูณด้วย Text Scale เพื่อไม่ให้ขยายซ้ำเมื่อปรับค่าหลายครั้ง fileciteturn6file0L198-L210
+
+---
+
+# 📑 สร้างแท็บ
 
 ```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"))()
+local Home = Library:CreateTab({
+    Name = "หน้าหลัก",
+    Icon = Library.Icons.Home,
+})
 ```
 
-> ต้องใช้ environment ที่รองรับ `loadstring` และ `game:HttpGet()` สำหรับรูปแบบนี้
+สร้างได้หลายแท็บ:
+
+```lua
+local Main = Library:CreateTab({
+    Name = "หลัก",
+    Icon = Library.Icons.Home,
+})
+
+local Player = Library:CreateTab({
+    Name = "ผู้เล่น",
+    Icon = Library.Icons.Player,
+})
+
+local Tools = Library:CreateTab({
+    Name = "เครื่องมือ",
+    Icon = Library.Icons.Action,
+})
+```
+
+> หมวด `ตั้งค่า GUI` มีอยู่ใน Library อยู่แล้ว ไม่ต้องสร้างซ้ำ
 
 ---
 
-# ✨ มีอะไรในรุ่นนี้
+# 🧩 Components
 
-## UI ใหม่
+## Label
 
-- Sidebar + Scrolling
-- Responsive สำหรับหน้าจอแคบ
-- หน้าต่างลากได้
-- ปุ่มโลโก้สำหรับเปิด/ปิด UI
-- ระบบเปิด/ปิดพร้อม animation
-- Notification
-- ระบบ cleanup ก่อนสร้าง UI รอบใหม่
-- รองรับ PC / Mobile
-
-## หมวดที่ย้ายมาจาก V1.0
-
-ฟังก์ชันของ V1 ถูกย้ายมาให้ใช้งานผ่าน UI ใหม่ โดยยังคงแบ่งหมวดตามหน้าที่:
-
-```text
-หลัก
-โจมตี
-เครื่องมือ
-แกล้ง
-ESP
-ตั้งค่า GUI
+```lua
+Library:CreateLabel(Home.Page, {
+    Text = "RUNLUA HUB",
+    Size = 15,
+    Bold = true,
+})
 ```
 
-### หลัก
+## Paragraph
 
-```text
-บิน
-กระโดดไม่จำกัด
-วิ่งเร็ว
-วาร์ปตามจุดที่กด
-เดินทะลุกำแพง
-หายตัว
-โหมดอมตะ บางแมพ
+```lua
+Library:CreateParagraph(Home.Page, {
+    Text = "คำอธิบายรายละเอียดของระบบ",
+    Size = 11,
+})
 ```
 
-ค่าที่ปรับได้ในหมวดนี้:
+## Section
 
-```text
-ความเร็วบิน
-ความเร็วเดิน
+```lua
+local General = Library:CreateSection(Home.Page, {
+    Name = "General",
+    Title = "ระบบทั่วไป",
+})
 ```
 
-### โจมตี
-
-```text
-ล็อคหัวผู้เล่น
-ขยาย Hitbox ผู้เล่น
-ล็อคหัว NPC / บอท
-ขยาย Hitbox NPC / บอท
-ฆ่าบอทใกล้ตัว
-```
-
-ค่าที่ปรับได้:
-
-```text
-FOV
-ขนาด Hitbox ผู้เล่น
-ขนาด Hitbox NPC / บอท
-ระยะฆ่าบอท
-```
-
-### ESP
-
-```text
-มองทะลุ ผู้เล่น
-เส้น ESP ผู้เล่น
-มองทะลุ NPC / บอท
-เส้น ESP NPC / บอท
-```
-
-พร้อมระบบ cache สำหรับ NPC และการล้าง ESP เมื่อปิดฟังก์ชัน
-
-### เครื่องมือ
-
-```text
-ลดกราฟิก เพิ่ม FPS
-ทำแมพสว่าง
-เพิ่มความเร็วรถ
-หยิบของเร็ว | E
-สแกนของในแมพ
-เสก Tool
-แป้นพิมพ์บนหน้าจอ
-เข้าเซิร์ฟเวอร์คนน้อย
-Infinite Yield
-Quirky CMD
-```
-
-ค่าที่ปรับได้:
-
-```text
-ความสว่าง
-ความเร็วรถ
-```
-
-### แกล้ง
-
-```text
-ดึงผู้เล่นมาใกล้ตัว
-หลุมดำดูดของ
-ชนผู้เล่นกระเด็น
-ถอดเสื้อผ้า
-ชักว่าว
-เครื่องมือ F3X
-```
-
-ฟังก์ชันที่เดิมเรียกไฟล์ภายนอกจะยังเรียกจากแหล่งเดิมเมื่อผู้ใช้กดปุ่ม แทนการฝังไฟล์ภายนอกเข้า Library
+จากนั้นใส่ Component ลงใน `General`
 
 ---
 
-# ⚙️ หมวด "ตั้งค่า GUI"
+# 🔘 Button
 
-แท็บนี้สร้างอัตโนมัติและแยกออกจากหมวดฟังก์ชันทั้งหมด
+```lua
+Library:CreateButton(General, {
+    Name = "ทดสอบระบบ",
+    Description = "กดเพื่อทดสอบ Callback",
+    Icon = Library.Icons.Action,
 
-## 1. ขนาด UI
+    Callback = function()
+        Library:Notify({
+            Title = "RUNLUA HUB",
+            Message = "ทำงานแล้ว",
+        })
+    end,
+})
+```
 
-ปรับได้:
+---
+
+# 🔘 Toggle
+
+```lua
+local Row, GetState, SetState = Library:CreateToggle(General, {
+    Name = "เปิดระบบ",
+    Description = "เปิดหรือปิดระบบ",
+    Default = false,
+
+    Callback = function(enabled)
+        print("State:", enabled)
+    end,
+})
+```
+
+อ่านสถานะ:
+
+```lua
+local enabled = GetState()
+```
+
+เปลี่ยนสถานะ:
+
+```lua
+SetState(true)
+```
+
+---
+
+# 🎚️ Slider
+
+```lua
+local Row, GetValue, SetValue = Library:CreateSlider(General, {
+    Name = "ความเร็ว",
+    Min = 0,
+    Max = 100,
+    Step = 1,
+    Default = 50,
+    Suffix = "%",
+
+    Callback = function(value)
+        print("Value:", value)
+    end,
+})
+```
+
+อ่านค่า:
+
+```lua
+local value = GetValue()
+```
+
+ตั้งค่า:
+
+```lua
+SetValue(75)
+```
+
+---
+
+# ✏️ Input
+
+```lua
+local Row, GetText, SetText = Library:CreateInput(General, {
+    Name = "ชื่อ",
+    Placeholder = "พิมพ์ชื่อ...",
+    Default = "",
+
+    Callback = function(text)
+        print(text)
+    end,
+})
+```
+
+อ่านข้อความ:
+
+```lua
+local text = GetText()
+```
+
+ตั้งข้อความ:
+
+```lua
+SetText("RUNLUA")
+```
+
+---
+
+# ⌨️ Keybind
+
+```lua
+local Row, GetKey, SetKey = Library:CreateKeybind(General, {
+    Name = "ปุ่มเปิดระบบ",
+    Default = Enum.KeyCode.E,
+
+    Callback = function(key)
+        print("New key:", key.Name)
+    end,
+})
+```
+
+---
+
+# 🔽 Dropdown
+
+```lua
+local Row, GetOption, SetOption = Library:CreateDropdown(General, {
+    Name = "เลือกโหมด",
+    Options = {
+        "โหมด 1",
+        "โหมด 2",
+        "โหมด 3",
+    },
+    Default = "โหมด 1",
+
+    Callback = function(value)
+        print("Selected:", value)
+    end,
+})
+```
+
+---
+
+# 👥 Player List
+
+```lua
+local Wrapper, RebuildPlayers, GetSelectedPlayer =
+    Library:CreatePlayerList(Home.Page, {
+        AccentColor = Library.Theme.Accent,
+
+        OnSelect = function(player)
+            print("เลือก:", player.Name)
+        end,
+    })
+```
+
+รีเฟรชรายชื่อ:
+
+```lua
+RebuildPlayers()
+```
+
+อ่านผู้เล่นที่เลือก:
+
+```lua
+local player = GetSelectedPlayer()
+```
+
+---
+
+# 🔔 Notification
+
+```lua
+Library:Notify({
+    Title = "RUNLUA HUB",
+    Message = "ระบบทำงานแล้ว",
+    Duration = 3,
+    Color = Library.Theme.Success,
+    Icon = Library.Icons.Home,
+})
+```
+
+รองรับค่า:
+
+```text
+Title
+Message
+Duration
+Color
+Icon
+```
+
+---
+
+# ⚙️ ตั้งค่า GUI
+
+หมวด **ตั้งค่า GUI** เป็นหมวดพิเศษของ Library และแยกจากแท็บระบบทั่วไปโดยอัตโนมัติ ระบบมีตัวควบคุมสำหรับขนาด UI, ขนาดตัวอักษร, น้ำหนักตัวอักษร และสีธีม fileciteturn0file0L447-L542
+
+## ขนาด UI
+
+ช่วงค่า:
 
 ```text
 0.55x → 1.80x
 ```
 
-ตัวอย่าง:
+## ขนาดตัวอักษร
+
+ช่วงค่า:
 
 ```text
-0.55x = เล็ก
-1.00x = ค่าเริ่มต้น
-1.80x = ใหญ่
+0.75x → 1.75x
 ```
 
-ค่านี้ใช้กับหน้าต่างหลักและปุ่มโลโก้
-
-## 2. ขนาดตัวอักษร
-
-ปรับได้:
-
-```text
-0.75x → 1.45x
-```
-
-ระบบจะจำ `BaseTextSize` ของแต่ละข้อความก่อนปรับ เพื่อป้องกันการคูณขนาดซ้ำเมื่อเลื่อนหลายครั้ง
-
-## 3. ความหนาตัวอักษร
-
-รองรับ:
+## ความหนาตัวอักษร
 
 ```text
 Regular
@@ -187,338 +336,339 @@ ExtraBold
 Heavy
 ```
 
-ฟอนต์หลักของ UI ใช้ Kanit ที่กำหนดไว้ใน Library
+## สีธีม
 
-## 4. เปลี่ยนสี
-
-มี Preset:
+Preset ที่มี:
 
 ```text
-Neon Blue
-Purple
-Crimson
-Emerald
-Monochrome
+น้ำเงินฟ้า
+ม่วงไฟฟ้า
+เขียวมรกต
+แดงคริมสัน
+ทอง
+ขาวดำ
 ```
 
-และปรับสีเองด้วย HEX:
+นอกจากนี้สามารถใส่ HEX ได้ เช่น:
 
 ```text
 #00A2FF
-#8B5CF6
-#22C55E
-#FF4161
-```
-
-ช่องสีที่ปรับได้:
-
-```text
-สีหลัก
-สีพื้นหลัง
-สีแผง
-สีแผงรอง
-สีข้อความ
-สีข้อความรอง
-สีเส้นขอบ
-```
-
-เมื่อเปลี่ยนสี ระบบจะ refresh สีขององค์ประกอบเดิม เช่น:
-
-```text
-Background
-Text
-UIStroke
-Scrollbar
-UIGradient
+#FF3355
+#FFFFFF
 ```
 
 ---
 
-# 💾 ระบบบันทึก / โหลด / รีเซ็ต
+# 💾 Settings API
 
-ชื่อไฟล์:
+API สำหรับระบบตั้งค่าอยู่ใน `Library.Settings` fileciteturn6file0L2429-L2477
 
-```text
-RUNLUA_HUB_GUI_SETTINGS.json
-```
-
-ข้อมูลหลักที่บันทึก:
-
-```text
-UI Scale
-Font Scale
-Font Weight
-Theme
-ตำแหน่งหน้าต่าง
-ตำแหน่งปุ่มโลโก้
-```
-
-กด:
-
-```text
-บันทึกการตั้งค่า
-```
-
-เพื่อเขียนไฟล์
-
-และ:
-
-```text
-โหลดการตั้งค่า
-```
-
-เพื่อโหลดค่ากลับมา
-
-ตอนเริ่ม Library จะพยายามโหลดค่าที่เคยบันทึกไว้อัตโนมัติ
-
-## รีเซ็ต
-
-ปุ่ม:
-
-```text
-รีเซ็ตกลับค่าเดิม
-```
-
-จะคืน:
-
-```text
-UI Scale      = 1.00x
-Font Scale    = 1.00x
-Font Weight   = Medium
-Theme         = ค่าเริ่มต้นของ Library
-ตำแหน่งหน้าต่าง = ตรงกลาง
-ตำแหน่งโลโก้    = ค่าเริ่มต้น
-```
-
-จากนั้นระบบจะบันทึกค่าที่รีเซ็ตไว้ด้วย เพื่อไม่ให้รันครั้งใหม่แล้วโหลดค่าก่อนหน้าเดิมกลับมา
-
----
-
-# 🔄 บันทึกอัตโนมัติ
-
-เปิด:
-
-```text
-บันทึกอัตโนมัติเมื่อเปลี่ยนค่า
-```
-
-แล้ว Library จะบันทึกเมื่อเปลี่ยนค่าตั้งค่า โดยใช้ debounce เพื่อลดการเขียนไฟล์ถี่เกินไป เช่นตอนลาก Slider
-
----
-
-# 🧩 API ใหม่ของ Library
-
-## Core
+### อ่านค่าปัจจุบัน
 
 ```lua
-Library:CreateTab()
-Library.CreateSection()
-Library.CreateDivider()
-Library.CreateToggle()
-Library.CreateButton()
-Library.CreateSlider()
-Library.CreateInput()
-Library.CreateKeybind()
-Library.CreateDropdown()
-Library.CreateLabel()
-Library.CreateParagraph()
-Library.CreatePlayerList()
-
-Library.SelectTab()
-Library.Notify()
-Library.Show()
-Library.Hide()
-Library.Destroy()
+local settings = Library.Settings.Get()
 ```
 
-## Settings
+### บันทึก
 
 ```lua
-Library.Settings.File
-Library.Settings.Save()
-Library.Settings.Load()
+local ok, result = Library.Settings.Save()
+print(ok, result)
+```
+
+### โหลด
+
+```lua
+local ok, result = Library.Settings.Load()
+print(ok, result)
+```
+
+### รีเซ็ตกลับค่าเดิม
+
+```lua
 Library.Settings.Reset()
-Library.Settings.Snapshot()
-Library.Settings.Apply(data)
+```
 
-Library.Settings.GetUIScale()
-Library.Settings.SetUIScale(value)
+### นำ Settings ที่มีอยู่มาใช้
 
-Library.Settings.GetFontScale()
-Library.Settings.SetFontScale(value)
+```lua
+Library.Settings.Apply(settings)
+```
 
-Library.Settings.GetFontWeight()
-Library.Settings.SetFontWeight(name)
+### ตรวจสอบ File Storage
+
+```lua
+local supported = Library.Settings.GetStorageAvailable()
+```
+
+ไฟล์เริ่มต้นของ Settings คือ:
+
+```text
+RUNLUA_HUB_SETTINGS.json
+```
+
+ระบบจะใช้ `isfile/readfile/writefile` เมื่อ Environment รองรับ และจะ fallback เป็น Memory Session เมื่อไม่รองรับ fileciteturn0file0L297-L320
+
+---
+
+# 🎨 Theme API
+
+เข้าถึง Theme ได้จาก:
+
+```lua
+Library.Theme
 ```
 
 ตัวอย่าง:
 
 ```lua
-Library.Settings.SetUIScale(1.25)
-Library.Settings.SetFontScale(1.10)
-Library.Settings.SetFontWeight("Bold")
+print(Library.Theme.Accent)
+print(Library.Theme.Background)
+print(Library.Theme.Text)
 ```
 
-บันทึกทันที:
-
-```lua
-Library.Settings.Save()
-```
-
-รีเซ็ต:
-
-```lua
-Library.Settings.Reset()
-```
-
----
-
-# 🔌 API Compatibility จาก V1
-
-เพื่อให้ย้ายโค้ด V1 ได้ง่าย แต่ละแท็บของ Library ใหม่รองรับ API แบบเดิม:
-
-```lua
-local Tab = Library:CreateTab({
-    Name = "ตัวอย่าง",
-    Icon = Library.Icons.Home,
-})
-
-Tab:NewLabel("หัวข้อ")
-
-Tab:NewButton("ทดสอบ", function()
-    print("ทำงาน")
-end, "คำอธิบาย")
-
-Tab:NewToggle("เปิดระบบ", false, function(enabled)
-    print(enabled)
-end, "คำอธิบาย", {
-    text = "ค่า",
-    min = 0,
-    max = 100,
-    default = 50,
-    callback = function(value)
-        print(value)
-    end,
-})
-```
-
-ดังนั้นโค้ดฟังก์ชันจาก `V1.0.lua` จึงย้ายเข้ามาใน UI ใหม่ได้โดยไม่ต้องสร้างหน้าต่าง V1 เดิมขึ้นมาอีก
-
----
-
-# 🧹 ระบบ Cleanup
-
-เมื่อกดปิด/Destroy Library ระบบจะพยายามคืนสถานะของฟังก์ชัน V1 ที่กำลังทำงาน เช่น:
+Palette หลักมี:
 
 ```text
-Fly
-Noclip
-Invisible
-Hitbox
-ESP
-FPS Boost
-Fullbright
-Click TP
-Car Speed
-Blackhole
-Proximity Prompt Fast
-Animation
-```
-
-พร้อม:
-
-```text
-Disconnect connections
-ลบ object ชั่วคราว
-ล้าง ESP line
-คืนค่าฟิสิกส์/Lighting ที่เก็บไว้
-หยุด animation ที่สร้างโดยระบบ
-```
-
-ช่วยลดปัญหา object ค้างและ connection ค้างหลังปิด UI
-
----
-
-# 📦 โครงสร้างไฟล์ ZIP
-
-```text
-RUNLUA_HUB_GUI_v2.1/
-│
-├─ UILibrary.lua
-├─ README.md
-└─ V1.0_ORIGINAL.lua
-```
-
-`UILibrary.lua` คือไฟล์หลักที่รวม UI ใหม่ + ฟังก์ชันจาก V1
-
-`V1.0_ORIGINAL.lua` เป็นสำเนา V1 ต้นฉบับสำหรับอ้างอิงเท่านั้น
-
----
-
-# 🛠️ วิธีใช้แบบเร็ว
-
-```text
-1. โหลด UILibrary.lua
-2. รอ UI เปิด
-3. เลือกหมวด หลัก / โจมตี / เครื่องมือ / แกล้ง / ESP
-4. ไปที่ "ตั้งค่า GUI"
-5. ปรับขนาด UI
-6. ปรับขนาดตัวอักษร
-7. เลือกความหนาอักษร
-8. เลือกสีหรือใส่ HEX
-9. กด "บันทึกการตั้งค่า"
-10. ครั้งถัดไป Library จะพยายามโหลดค่าที่บันทึกไว้
+Background
+Surface
+SurfaceAlt
+SurfaceHover
+Accent
+AccentSoft
+AccentLight
+Text
+TextMuted
+Border
+Success
+Danger
+Warning
+SwitchOff
+Shadow
+White
+IconGradStart
+IconGradEnd
+IconGradAngle
+IconDim
 ```
 
 ---
 
-# ⚠️ หมายเหตุ
+# 🖼️ Icons
 
-การบันทึกแบบไฟล์ถาวรขึ้นอยู่กับ environment ที่ใช้รัน หาก environment ไม่มี:
+ตัวอย่าง Icon ที่มี:
 
 ```lua
-isfile
-readfile
-writefile
+Library.Icons.Home
+Library.Icons.Settings
+Library.Icons.Player
+Library.Icons.ESP
+Library.Icons.Teleport
+Library.Icons.Fling
+Library.Icons.Save
+Library.Icons.Cloud
 ```
-
-ระบบบันทึกไฟล์จะไม่สามารถเขียน JSON ลงดิสก์ได้
-
-ส่วนการเรียก GitHub Raw ต้องใช้ environment ที่รองรับ:
-
-```lua
-game:HttpGet()
-loadstring()
-```
-
-ฟังก์ชันบางรายการจาก V1 เป็น client-side และผลลัพธ์จะแตกต่างกันตามเกม/ระบบ server ของเกมที่กำลังเล่น
 
 ---
 
-# 🌐 GitHub
+# 🪟 เปิด / ซ่อน / ทำลาย UI
 
-ใช้ไฟล์หลักบน GitHub ที่ path:
+แสดง:
+
+```lua
+Library:Show()
+```
+
+ซ่อน:
+
+```lua
+Library:Hide()
+```
+
+ทำลายและ Cleanup:
+
+```lua
+Library:Destroy()
+```
+
+---
+
+# 📱 PC / Mobile
+
+Library ตรวจจับ Platform และปรับ Layout ตามพื้นที่หน้าจอ โดยมี `Library.IsMobile` และ `Library.Platform` ให้ตรวจสอบได้ fileciteturn6file0L15-L31
+
+```lua
+print(Library.Platform)
+print(Library.IsMobile)
+```
+
+เมื่อหน้าจอแคบ Sidebar จะเข้าสู่ Compact Mode เพื่อช่วยลดปัญหาข้อความและ Component ชนกัน fileciteturn6file0L607-L610
+
+---
+
+# 🖱️ การลาก UI
+
+### PC
+
+ลากจาก Header ด้วย:
+
+```text
+คลิกขวา + ลาก
+```
+
+### Mobile
+
+```text
+แตะค้าง + ลาก
+```
+
+ระบบ Drag มี threshold เพื่อแยกการลากออกจากการกด และมีการป้องกันการจับ Input ซ้อนกัน fileciteturn6file0L724-L832
+
+ปุ่ม Logo ใช้สำหรับเปิด / ซ่อนหน้าต่าง
+
+---
+
+# 🧹 Cleanup
+
+เรียก:
+
+```lua
+Library:Destroy()
+```
+
+เพื่อปิด UI และตัด Connections ที่ Library จัดการไว้
+
+---
+
+# 🔄 อัปเดต Library บน GitHub
+
+แก้ไฟล์:
 
 ```text
 UI Library/UILibrary.lua
 ```
 
-Raw API:
+จากนั้น Commit + Push ขึ้น branch `main`
+
+Loader เดิมใช้ต่อได้ เพราะ URL ชี้ไปยังไฟล์เดิม:
 
 ```text
 https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua
 ```
 
-ตัวโหลด:
+ดังนั้นโดยปกติผู้ใช้ไม่จำเป็นต้องเปลี่ยน Loader เมื่อคุณอัปเดตเฉพาะเนื้อหาของ `UILibrary.lua`
+
+---
+
+# 🛠️ ตัวอย่างพร้อมใช้งาน
 
 ```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"))()
+local Library = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"
+))()
+
+local Main = Library:CreateTab({
+    Name = "หน้าหลัก",
+    Icon = Library.Icons.Home,
+})
+
+local General = Library:CreateSection(Main.Page, {
+    Name = "General",
+    Title = "ระบบทั่วไป",
+})
+
+Library:CreateLabel(Main.Page, {
+    Text = "RUNLUA HUB",
+    Size = 15,
+    Bold = true,
+})
+
+Library:CreateParagraph(Main.Page, {
+    Text = "ตัวอย่างการใช้งาน UI Library",
+})
+
+Library:CreateButton(General, {
+    Name = "ทดสอบ",
+    Description = "กดเพื่อแสดง Notification",
+    Callback = function()
+        Library:Notify({
+            Title = "RUNLUA HUB",
+            Message = "ทดสอบสำเร็จ",
+            Duration = 3,
+            Color = Library.Theme.Success,
+            Icon = Library.Icons.Home,
+        })
+    end,
+})
+
+Library:CreateToggle(General, {
+    Name = "ระบบตัวอย่าง",
+    Description = "Toggle สำหรับระบบของคุณ",
+    Default = false,
+    Callback = function(enabled)
+        print("Enabled:", enabled)
+    end,
+})
+
+Library:CreateSlider(General, {
+    Name = "ค่า",
+    Min = 1,
+    Max = 100,
+    Step = 1,
+    Default = 50,
+    Callback = function(value)
+        print("Value:", value)
+    end,
+})
+
+Library:CreateDropdown(General, {
+    Name = "โหมด",
+    Options = {"ปกติ", "เร็ว", "สูงสุด"},
+    Default = "ปกติ",
+    Callback = function(value)
+        print("Mode:", value)
+    end,
+})
 ```
 
 ---
 
-# 🏁 RUNLUA HUB
+# 📚 API Reference
 
-**Unified UI • V1 Function Migration • Settings System • Save/Load • Responsive Sidebar**
+| API | หน้าที่ |
+|---|---|
+| `CreateTab` | สร้างแท็บ |
+| `CreateSection` | สร้าง Section |
+| `CreateDivider` | สร้างเส้นแบ่ง |
+| `CreateToggle` | สร้าง Toggle |
+| `CreateButton` | สร้าง Button |
+| `CreateSlider` | สร้าง Slider |
+| `CreateInput` | สร้างช่องข้อความ |
+| `CreateKeybind` | สร้าง Keybind |
+| `CreateDropdown` | สร้าง Dropdown |
+| `CreateLabel` | สร้างข้อความ |
+| `CreateParagraph` | สร้างข้อความหลายบรรทัด |
+| `CreatePlayerList` | สร้างรายการผู้เล่น |
+| `Notify` | แจ้งเตือน |
+| `SelectTab` | เลือกแท็บ |
+| `Show` | แสดง UI |
+| `Hide` | ซ่อน UI |
+| `Destroy` | Cleanup และปิด UI |
+| `Settings.Get` | อ่าน Settings |
+| `Settings.Save` | บันทึก Settings |
+| `Settings.Load` | โหลด Settings |
+| `Settings.Reset` | รีเซ็ต Settings |
+| `Settings.Apply` | ใช้ Settings |
+| `Settings.GetStorageAvailable` | ตรวจสอบ File Storage |
 
-รุ่นนี้ตั้งใจให้ `UILibrary.lua` เป็นไฟล์กลางของ UI Library และให้ฟังก์ชันจาก V1 อยู่ภายใน UI รุ่นใหม่ทั้งหมด
+---
+
+## 📌 GitHub Raw URL
+
+```text
+https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua
+```
+
+## ❤️ RUNLUA HUB
+
+UI Library สำหรับโปรเจกต์ RUNLUA HUB — ออกแบบให้ใช้งานซ้ำได้ง่าย ดูเป็นระบบ และดูแลต่อบน GitHub ได้สะดวก
