@@ -10,17 +10,12 @@ local CurrentPlaceId = tostring(game.PlaceId)
 
 local games = {
     ["142823291"] = {
-        Name = "ฆาตกรรมลึกลับ 2",
+        Name = "Murder Mystery 2",
         ShortName = "ฆาตกรรมลึกลับ 2",
         URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/Mysterious%20Murder%202/obf25.txt"
     },
-    ["118805555015549"] = {
-        Name = "บอส +1 ของดรอปเพื่อหลอม",
-        ShortName = "บอส +1 ของดรอปเพื่อหลอม",
-        URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/%5BBOSS%5D%2B1%20Loot%20To%20Forge/runlua.lua"
-    },
     ["100068273119174"] = {
-        Name = "ทำความสะอาดใบไม้ทั้งหมด",
+        Name = "Clean all the Leaves",
         ShortName = "ทำความสะอาดใบไม้ทั้งหมด",
         URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/Clean%20all%20the%20Leaves/1.1.lua"
     }
