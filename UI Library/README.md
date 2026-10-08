@@ -1,137 +1,182 @@
+# RUNLUA HUB — Unified UI Library v2.1
 
-> UI Library แบบ Sidebar + Scrolling ที่เน้นใช้งานจริง พร้อมหมวด **ตั้งค่า GUI** แบบพิเศษ, ปรับขนาด, ปรับตัวอักษร, เปลี่ยนสี, บันทึก/โหลด และรีเซ็ตกลับค่าเดิม
+> รุ่นนี้รวมฟังก์ชันจาก `V1.0.lua` เข้าไปอยู่ใน Sidebar + Scrolling UI รุ่นใหม่โดยตรง พร้อมหมวด **ตั้งค่า GUI** แบบแยกเฉพาะ, ปรับขนาด UI, ปรับฟอนต์, เปลี่ยนสี, บันทึก/โหลด/รีเซ็ต และระบบ cleanup ตอนปิด UI
 
-## ✨ จุดเด่น
+---
 
-- **Sidebar + Scrolling UI** — รองรับแท็บจำนวนมากและจอแคบ
-- **Responsive** — จอเล็กจะเข้าสู่โหมด compact อัตโนมัติ
-- **ลากหน้าต่าง** — PC: คลิกขวาค้างที่ Header / Mobile: ลาก Header
-- **ปุ่มโลโก้** — คลิกเพื่อเปิด/ปิด UI และลากตำแหน่งได้
-- **หมวดตั้งค่า GUI พิเศษ** — แยกจากแท็บปกติและวางไว้ท้าย Sidebar
-- **ปรับขนาด UI** — 0.55x ถึง 1.80x
-- **ปรับขนาดตัวอักษร** — 0.75x ถึง 1.75x
-- **ปรับความหนาอักษร** — Regular → Heavy
-- **เปลี่ยนสี** — มีชุดสีสำเร็จรูป + HEX แบบกำหนดเอง
-- **บันทึกการตั้งค่า** — เขียนเป็น `RUNLUA_HUB_SETTINGS.json` เมื่อ environment รองรับ `writefile/readfile/isfile`
-- **โหลดอัตโนมัติ** — ตอนเริ่ม UI จะพยายามโหลดค่าที่เคยบันทึกไว้
-- **รีเซ็ตค่าเดิม** — คืนขนาด/สี/ตัวอักษรกลับค่าเริ่มต้นโดยไม่ต้องรันใหม่
-- **กัน error** — งานที่แตะ file API / JSON / UI บางส่วนครอบด้วย `pcall` เพื่อไม่ให้ระบบหลักดับง่าย
+## 🚀 โหลด Library จาก GitHub Raw
 
-## 📦 ไฟล์
+URL หลัก:
 
 ```text
-UILibrary_REDESIGN_SCROLL.lua   ← ไฟล์ Library ที่แก้แล้ว
-README.md                       ← คู่มือฉบับนี้
-RUNLUA_HUB_SETTINGS.json        ← สร้างอัตโนมัติหลังบันทึก (เฉพาะ environment ที่รองรับ file API)
+https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua
 ```
 
-## 🚀 วิธีเริ่มใช้งาน
-
-### แบบ Library / `require`
-
-นำ `UILibrary_REDESIGN_SCROLL.lua` ไปใส่เป็น ModuleScript แล้ว `require()` จาก LocalScript ฝั่ง client
+ตัวโหลดมาตรฐาน:
 
 ```lua
-local Library = require(script.Parent.UILibrary_REDESIGN_SCROLL)
-
-local Home = Library:CreateTab({
-    Name = "หน้าหลัก",
-    Icon = Library.Icons.Home,
-})
-
-local Section = Library.CreateSection(Home.Page, {
-    Title = "ทั่วไป",
-})
-
-Library.CreateToggle(Section, {
-    Name = "เปิดใช้งาน",
-    Description = "ตัวอย่าง Toggle",
-    Icon = Library.Icons.Action,
-    Default = false,
-    Callback = function(enabled)
-        print("สถานะ:", enabled)
-    end,
-})
-
-Library.CreateButton(Section, {
-    Name = "ทดสอบปุ่ม",
-    Description = "ตัวอย่าง Button",
-    Icon = Library.Icons.Action,
-    Callback = function()
-        Library.Notify({
-            Title = "สำเร็จ",
-            Message = "ปุ่มทำงานแล้ว",
-        })
-    end,
-})
+local Library = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"
+))()
 ```
 
-### แบบ API จาก GitHub Raw ⭐
-
-แนะนำให้ใช้วิธีนี้สำหรับการโหลด Library จากไฟล์กลางของ RUNLUA HUB โดยตรง:
-
-```lua
-local API_URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"
-local Library = loadstring(game:HttpGet(API_URL))()
-```
-
-หรือแบบสั้น:
+แบบบรรทัดเดียว:
 
 ```lua
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"))()
 ```
 
-> วิธีนี้ต้องใช้ environment ที่รองรับ `loadstring` และ `game:HttpGet()`
-> และ URL จะโหลดไฟล์ `UILibrary.lua` จาก GitHub branch `main` โดยตรง
+> ต้องใช้ environment ที่รองรับ `loadstring` และ `game:HttpGet()` สำหรับรูปแบบนี้
 
-### ตัวอย่างเริ่มต้นแบบ API
+---
 
-```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"))()
+# ✨ มีอะไรในรุ่นนี้
 
-local Home = Library:CreateTab({
-    Name = "หน้าหลัก",
-    Icon = Library.Icons.Home,
-})
+## UI ใหม่
 
-local Section = Library.CreateSection(Home.Page, {
-    Title = "ทั่วไป",
-})
+- Sidebar + Scrolling
+- Responsive สำหรับหน้าจอแคบ
+- หน้าต่างลากได้
+- ปุ่มโลโก้สำหรับเปิด/ปิด UI
+- ระบบเปิด/ปิดพร้อม animation
+- Notification
+- ระบบ cleanup ก่อนสร้าง UI รอบใหม่
+- รองรับ PC / Mobile
 
-Library.CreateButton(Section, {
-    Name = "ทดสอบระบบ",
-    Description = "ทดสอบว่า GUI โหลดสำเร็จและ API ใช้งานได้",
-    Icon = Library.Icons.Action,
-    Callback = function()
-        Library.Notify({
-            Title = "RUNLUA HUB",
-            Message = "API โหลดสำเร็จแล้ว!",
-        })
-    end,
-})
+## หมวดที่ย้ายมาจาก V1.0
+
+ฟังก์ชันของ V1 ถูกย้ายมาให้ใช้งานผ่าน UI ใหม่ โดยยังคงแบ่งหมวดตามหน้าที่:
+
+```text
+หลัก
+โจมตี
+เครื่องมือ
+แกล้ง
+ESP
+ตั้งค่า GUI
 ```
 
-> `readfile/writefile/isfile` ไม่ใช่ API มาตรฐานที่มีในทุก environment ดังนั้นระบบบันทึกแบบไฟล์จะแจ้งเตือนและ fallback เป็นหน่วยความจำเมื่อไม่มี file API
+### หลัก
 
-## ⚙️ หมวด “ตั้งค่า GUI”
+```text
+บิน
+กระโดดไม่จำกัด
+วิ่งเร็ว
+วาร์ปตามจุดที่กด
+เดินทะลุกำแพง
+หายตัว
+โหมดอมตะ บางแมพ
+```
 
-หลัง Library เริ่มทำงาน จะมีแท็บ **ตั้งค่า GUI** ถูกสร้างให้อัตโนมัติ ไม่ต้องสร้างเอง
+ค่าที่ปรับได้ในหมวดนี้:
 
-### 1) ขนาด UI
+```text
+ความเร็วบิน
+ความเร็วเดิน
+```
 
-เลื่อนค่า `ขนาด UI` เพื่อขยาย/ย่อหน้าต่างรวมถึงปุ่มโลโก้
+### โจมตี
 
-- `0.55x` = เล็กมาก
-- `1.00x` = ค่าเริ่มต้น
-- `1.80x` = ใหญ่สุด
+```text
+ล็อคหัวผู้เล่น
+ขยาย Hitbox ผู้เล่น
+ล็อคหัว NPC / บอท
+ขยาย Hitbox NPC / บอท
+ฆ่าบอทใกล้ตัว
+```
 
-### 2) ขนาดตัวอักษร
+ค่าที่ปรับได้:
 
-เลื่อน `ขนาดตัวอักษร` เพื่อเพิ่ม/ลดขนาดข้อความทั้ง Library โดยระบบจำ **ขนาดต้นฉบับ** แยกไว้ เพื่อไม่ให้การปรับหลายรอบทำให้ตัวหนังสือโตทับซ้อน
+```text
+FOV
+ขนาด Hitbox ผู้เล่น
+ขนาด Hitbox NPC / บอท
+ระยะฆ่าบอท
+```
 
-### 3) ความหนาอักษร
+### ESP
 
-เลือกได้:
+```text
+มองทะลุ ผู้เล่น
+เส้น ESP ผู้เล่น
+มองทะลุ NPC / บอท
+เส้น ESP NPC / บอท
+```
+
+พร้อมระบบ cache สำหรับ NPC และการล้าง ESP เมื่อปิดฟังก์ชัน
+
+### เครื่องมือ
+
+```text
+ลดกราฟิก เพิ่ม FPS
+ทำแมพสว่าง
+เพิ่มความเร็วรถ
+หยิบของเร็ว | E
+สแกนของในแมพ
+เสก Tool
+แป้นพิมพ์บนหน้าจอ
+เข้าเซิร์ฟเวอร์คนน้อย
+Infinite Yield
+Quirky CMD
+```
+
+ค่าที่ปรับได้:
+
+```text
+ความสว่าง
+ความเร็วรถ
+```
+
+### แกล้ง
+
+```text
+ดึงผู้เล่นมาใกล้ตัว
+หลุมดำดูดของ
+ชนผู้เล่นกระเด็น
+ถอดเสื้อผ้า
+ชักว่าว
+เครื่องมือ F3X
+```
+
+ฟังก์ชันที่เดิมเรียกไฟล์ภายนอกจะยังเรียกจากแหล่งเดิมเมื่อผู้ใช้กดปุ่ม แทนการฝังไฟล์ภายนอกเข้า Library
+
+---
+
+# ⚙️ หมวด "ตั้งค่า GUI"
+
+แท็บนี้สร้างอัตโนมัติและแยกออกจากหมวดฟังก์ชันทั้งหมด
+
+## 1. ขนาด UI
+
+ปรับได้:
+
+```text
+0.55x → 1.80x
+```
+
+ตัวอย่าง:
+
+```text
+0.55x = เล็ก
+1.00x = ค่าเริ่มต้น
+1.80x = ใหญ่
+```
+
+ค่านี้ใช้กับหน้าต่างหลักและปุ่มโลโก้
+
+## 2. ขนาดตัวอักษร
+
+ปรับได้:
+
+```text
+0.75x → 1.45x
+```
+
+ระบบจะจำ `BaseTextSize` ของแต่ละข้อความก่อนปรับ เพื่อป้องกันการคูณขนาดซ้ำเมื่อเลื่อนหลายครั้ง
+
+## 3. ความหนาตัวอักษร
+
+รองรับ:
 
 ```text
 Regular
@@ -142,237 +187,338 @@ ExtraBold
 Heavy
 ```
 
-น้ำหนักฟอนต์ชุดนี้เป็นชื่อที่ Roblox รองรับในระบบ font weight ปัจจุบัน
+ฟอนต์หลักของ UI ใช้ Kanit ที่กำหนดไว้ใน Library
 
-### 4) เปลี่ยนสี
+## 4. เปลี่ยนสี
 
-#### ชุดสีหลัก
-
-มี preset ให้เลือก:
+มี Preset:
 
 ```text
-น้ำเงินฟ้า
-ม่วงไฟฟ้า
-เขียวมรกต
-แดงคริมสัน
-ทอง
-ขาวดำ
+Neon Blue
+Purple
+Crimson
+Emerald
+Monochrome
 ```
 
-#### สีหลัก HEX
-
-ใส่สีเองได้ เช่น
+และปรับสีเองด้วย HEX:
 
 ```text
 #00A2FF
 #8B5CF6
 #22C55E
+#FF4161
 ```
 
-ระบบจะสร้าง `AccentSoft` และ `AccentLight` ให้จากสีหลักอัตโนมัติ
-
-#### สีพื้นหลัง HEX
-
-ใส่สีพื้นหลังเองได้ เช่น
+ช่องสีที่ปรับได้:
 
 ```text
-#0A1020
-#111111
-#080808
+สีหลัก
+สีพื้นหลัง
+สีแผง
+สีแผงรอง
+สีข้อความ
+สีข้อความรอง
+สีเส้นขอบ
 ```
 
-### 5) บันทึกการตั้งค่า
-
-กด **บันทึกการตั้งค่า** เพื่อบันทึกค่าเหล่านี้:
-
-- ขนาด UI
-- ขนาดตัวอักษร
-- ความหนาอักษร
-- สีธีมที่เป็น Color3
-- ตำแหน่งหน้าต่างหลัก
-- ตำแหน่งปุ่มโลโก้
-
-ไฟล์ชื่อ:
+เมื่อเปลี่ยนสี ระบบจะ refresh สีขององค์ประกอบเดิม เช่น:
 
 ```text
-RUNLUA_HUB_SETTINGS.json
+Background
+Text
+UIStroke
+Scrollbar
+UIGradient
 ```
 
-ระบบใช้ `HttpService:JSONEncode()` / `JSONDecode()` เฉพาะสำหรับแปลงข้อมูลการตั้งค่าเป็น JSON; การใช้ JSON ไม่ได้เปิด HTTP request ให้อัตโนมัติ
+---
 
-### 6) โหลดการตั้งค่า
+# 💾 ระบบบันทึก / โหลด / รีเซ็ต
 
-กด **โหลดการตั้งค่า** ได้ตลอดเวลาเพื่อดึงค่าจากไฟล์ล่าสุดกลับมาใช้ และระบบจะพยายามโหลดค่าเดิมอัตโนมัติในตอนเริ่มต้น
-
-### 7) รีเซ็ตกลับค่าเดิม
-
-กด **รีเซ็ตกลับค่าเดิม** เพื่อคืนค่า:
+ชื่อไฟล์:
 
 ```text
-UI Scale        = 1.00x
-Text Scale      = 1.00x
-Font Weight     = Bold
-Theme           = ค่าเริ่มต้นของ Library
+RUNLUA_HUB_GUI_SETTINGS.json
 ```
 
-ตำแหน่งหน้าต่าง/โลโก้จะไม่ถูกลากกลับอัตโนมัติจากปุ่มรีเซ็ต เพื่อป้องกันผู้ใช้เสียตำแหน่งที่จัดไว้; ถ้าต้องการเก็บตำแหน่งใหม่ให้กดบันทึกอีกครั้ง
+ข้อมูลหลักที่บันทึก:
 
-## 🧩 API ที่เพิ่ม
+```text
+UI Scale
+Font Scale
+Font Weight
+Theme
+ตำแหน่งหน้าต่าง
+ตำแหน่งปุ่มโลโก้
+```
+
+กด:
+
+```text
+บันทึกการตั้งค่า
+```
+
+เพื่อเขียนไฟล์
+
+และ:
+
+```text
+โหลดการตั้งค่า
+```
+
+เพื่อโหลดค่ากลับมา
+
+ตอนเริ่ม Library จะพยายามโหลดค่าที่เคยบันทึกไว้อัตโนมัติ
+
+## รีเซ็ต
+
+ปุ่ม:
+
+```text
+รีเซ็ตกลับค่าเดิม
+```
+
+จะคืน:
+
+```text
+UI Scale      = 1.00x
+Font Scale    = 1.00x
+Font Weight   = Medium
+Theme         = ค่าเริ่มต้นของ Library
+ตำแหน่งหน้าต่าง = ตรงกลาง
+ตำแหน่งโลโก้    = ค่าเริ่มต้น
+```
+
+จากนั้นระบบจะบันทึกค่าที่รีเซ็ตไว้ด้วย เพื่อไม่ให้รันครั้งใหม่แล้วโหลดค่าก่อนหน้าเดิมกลับมา
+
+---
+
+# 🔄 บันทึกอัตโนมัติ
+
+เปิด:
+
+```text
+บันทึกอัตโนมัติเมื่อเปลี่ยนค่า
+```
+
+แล้ว Library จะบันทึกเมื่อเปลี่ยนค่าตั้งค่า โดยใช้ debounce เพื่อลดการเขียนไฟล์ถี่เกินไป เช่นตอนลาก Slider
+
+---
+
+# 🧩 API ใหม่ของ Library
+
+## Core
 
 ```lua
-Library.Settings.FileName
-Library.Settings.Get()
+Library:CreateTab()
+Library.CreateSection()
+Library.CreateDivider()
+Library.CreateToggle()
+Library.CreateButton()
+Library.CreateSlider()
+Library.CreateInput()
+Library.CreateKeybind()
+Library.CreateDropdown()
+Library.CreateLabel()
+Library.CreateParagraph()
+Library.CreatePlayerList()
+
+Library.SelectTab()
+Library.Notify()
+Library.Show()
+Library.Hide()
+Library.Destroy()
+```
+
+## Settings
+
+```lua
+Library.Settings.File
 Library.Settings.Save()
 Library.Settings.Load()
 Library.Settings.Reset()
+Library.Settings.Snapshot()
 Library.Settings.Apply(data)
-Library.Settings.GetStorageAvailable()
+
+Library.Settings.GetUIScale()
+Library.Settings.SetUIScale(value)
+
+Library.Settings.GetFontScale()
+Library.Settings.SetFontScale(value)
+
+Library.Settings.GetFontWeight()
+Library.Settings.SetFontWeight(name)
 ```
 
-ตัวอย่างเช็กว่า environment บันทึกไฟล์ได้หรือไม่:
+ตัวอย่าง:
 
 ```lua
-if Library.Settings.GetStorageAvailable() then
-    print("File save: READY")
-else
-    print("File save: UNAVAILABLE")
-end
+Library.Settings.SetUIScale(1.25)
+Library.Settings.SetFontScale(1.10)
+Library.Settings.SetFontWeight("Bold")
 ```
 
-ตัวอย่างอ่านค่าปัจจุบัน:
+บันทึกทันที:
 
 ```lua
-local cfg = Library.Settings.Get()
-print(cfg.UserScale)
-print(cfg.TextScale)
-print(cfg.FontWeight)
+Library.Settings.Save()
 ```
 
-## 🛠️ Component API เดิม
-
-ยังคงมี:
+รีเซ็ต:
 
 ```lua
-Library.CreateTab
-Library.CreateSection
-Library.CreateDivider
-Library.CreateToggle
-Library.CreateButton
-Library.CreateSlider
-Library.CreateInput
-Library.CreateKeybind
-Library.CreateDropdown
-Library.CreateLabel
-Library.CreateParagraph
-Library.CreatePlayerList
-Library.SelectTab
-Library.Notify
-Library.Show
-Library.Hide
-Library.Destroy
+Library.Settings.Reset()
 ```
 
-## 🧪 ตัวอย่าง Slider
+---
+
+# 🔌 API Compatibility จาก V1
+
+เพื่อให้ย้ายโค้ด V1 ได้ง่าย แต่ละแท็บของ Library ใหม่รองรับ API แบบเดิม:
 
 ```lua
-Library.CreateSlider(Section, {
-    Name = "ความเร็ว",
-    Min = 0,
-    Max = 100,
-    Step = 1,
-    Default = 50,
-    Suffix = "%",
-    Callback = function(value)
-        print("ค่า:", value)
+local Tab = Library:CreateTab({
+    Name = "ตัวอย่าง",
+    Icon = Library.Icons.Home,
+})
+
+Tab:NewLabel("หัวข้อ")
+
+Tab:NewButton("ทดสอบ", function()
+    print("ทำงาน")
+end, "คำอธิบาย")
+
+Tab:NewToggle("เปิดระบบ", false, function(enabled)
+    print(enabled)
+end, "คำอธิบาย", {
+    text = "ค่า",
+    min = 0,
+    max = 100,
+    default = 50,
+    callback = function(value)
+        print(value)
     end,
 })
 ```
 
-## 🧪 ตัวอย่าง Dropdown
+ดังนั้นโค้ดฟังก์ชันจาก `V1.0.lua` จึงย้ายเข้ามาใน UI ใหม่ได้โดยไม่ต้องสร้างหน้าต่าง V1 เดิมขึ้นมาอีก
 
-```lua
-Library.CreateDropdown(Section, {
-    Name = "โหมด",
-    Options = {"ปลอดภัย", "ปกติ", "แรง"},
-    Default = "ปกติ",
-    Callback = function(value)
-        print("เลือก:", value)
-    end,
-})
+---
+
+# 🧹 ระบบ Cleanup
+
+เมื่อกดปิด/Destroy Library ระบบจะพยายามคืนสถานะของฟังก์ชัน V1 ที่กำลังทำงาน เช่น:
+
+```text
+Fly
+Noclip
+Invisible
+Hitbox
+ESP
+FPS Boost
+Fullbright
+Click TP
+Car Speed
+Blackhole
+Proximity Prompt Fast
+Animation
 ```
 
-## 🧪 ตัวอย่าง Keybind
+พร้อม:
 
-```lua
-Library.CreateKeybind(Section, {
-    Name = "ปุ่มเปิดเมนู",
-    Default = Enum.KeyCode.RightShift,
-    Callback = function(key)
-        print("ตั้งปุ่มเป็น:", key.Name)
-    end,
-})
+```text
+Disconnect connections
+ลบ object ชั่วคราว
+ล้าง ESP line
+คืนค่าฟิสิกส์/Lighting ที่เก็บไว้
+หยุด animation ที่สร้างโดยระบบ
 ```
 
-## 🧯 สิ่งที่แก้ในเวอร์ชันนี้
+ช่วยลดปัญหา object ค้างและ connection ค้างหลังปิด UI
 
-- ปรับ scope ของตัวแปรที่ถูกเรียกใช้ก่อน declaration ให้ชัดเจนขึ้น
-- ป้องกันการชนกันของการปรับ scale กับ responsive scale
-- ทำให้ text scaling ใช้ “base size” จึงไม่คูณซ้ำเมื่อปรับหลายรอบ
-- เพิ่มการ refresh สีทั้ง Background / Text / UIStroke / UIGradient ตาม palette เดิม
-- ทำให้ Tab ปกติและ Settings Tab มีสถานะแยกกัน
-- Settings Tab ถูกวางไว้ท้าย Sidebar พร้อม separator และ visual style พิเศษ
-- ปรับ `CreateTab` ให้รองรับ `Order`
-- เพิ่ม `Cloud` icon ที่ใช้จริงในปุ่มโหลด
-- เพิ่มระบบโหลดค่าอัตโนมัติเมื่อเริ่มต้น
-- เพิ่ม fallback เมื่อไม่มี file API
-- เพิ่มการตรวจ JSON และค่าตัวเลข/สีที่โหลดเข้ามา ไม่ปล่อยค่าขยะเข้าระบบ
-- ขนาดโลโก้ sync กับ UI scale
-- รองรับฟอนต์ weight แบบ Roblox สมัยใหม่
-- เพิ่ม API `Library.Settings.*` สำหรับควบคุมจากสคริปต์ภายนอก
+---
 
-## 📌 หมายเหตุสำคัญ
+# 📦 โครงสร้างไฟล์ ZIP
 
-ไฟล์นี้เป็น GUI Library ฝั่ง client และมีโค้ดตรวจจับ platform/input รวมถึงการ fallback ระหว่าง `CoreGui` กับ `PlayerGui` ตาม environment
+```text
+RUNLUA_HUB_GUI_v2.1/
+│
+├─ UILibrary.lua
+├─ README.md
+└─ V1.0_ORIGINAL.lua
+```
 
-การบันทึกแบบถาวรขึ้นกับความสามารถของ environment ที่รันอยู่ หากไม่มี `isfile/readfile/writefile` ปุ่มบันทึกจะไม่ทำให้ script crash แต่จะเก็บ snapshot ไว้ในหน่วยความจำของ session เท่านั้น
+`UILibrary.lua` คือไฟล์หลักที่รวม UI ใหม่ + ฟังก์ชันจาก V1
 
-`HttpService:JSONEncode()` และ `JSONDecode()` ใช้สำหรับ serialization ของข้อมูลการตั้งค่า ไม่ได้หมายความว่าระบบกำลังส่ง HTTP request ออกไป
+`V1.0_ORIGINAL.lua` เป็นสำเนา V1 ต้นฉบับสำหรับอ้างอิงเท่านั้น
 
-## 🌐 RUNLUA HUB API URL
+---
 
-URL หลักสำหรับโหลด UI Library รุ่นใน GitHub:
+# 🛠️ วิธีใช้แบบเร็ว
+
+```text
+1. โหลด UILibrary.lua
+2. รอ UI เปิด
+3. เลือกหมวด หลัก / โจมตี / เครื่องมือ / แกล้ง / ESP
+4. ไปที่ "ตั้งค่า GUI"
+5. ปรับขนาด UI
+6. ปรับขนาดตัวอักษร
+7. เลือกความหนาอักษร
+8. เลือกสีหรือใส่ HEX
+9. กด "บันทึกการตั้งค่า"
+10. ครั้งถัดไป Library จะพยายามโหลดค่าที่บันทึกไว้
+```
+
+---
+
+# ⚠️ หมายเหตุ
+
+การบันทึกแบบไฟล์ถาวรขึ้นอยู่กับ environment ที่ใช้รัน หาก environment ไม่มี:
+
+```lua
+isfile
+readfile
+writefile
+```
+
+ระบบบันทึกไฟล์จะไม่สามารถเขียน JSON ลงดิสก์ได้
+
+ส่วนการเรียก GitHub Raw ต้องใช้ environment ที่รองรับ:
+
+```lua
+game:HttpGet()
+loadstring()
+```
+
+ฟังก์ชันบางรายการจาก V1 เป็น client-side และผลลัพธ์จะแตกต่างกันตามเกม/ระบบ server ของเกมที่กำลังเล่น
+
+---
+
+# 🌐 GitHub
+
+ใช้ไฟล์หลักบน GitHub ที่ path:
+
+```text
+UI Library/UILibrary.lua
+```
+
+Raw API:
 
 ```text
 https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua
 ```
 
-ตัวโหลดมาตรฐาน:
+ตัวโหลด:
 
 ```lua
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"))()
 ```
 
-เมื่ออัปเดตไฟล์ `UILibrary.lua` บน GitHub แล้ว สคริปต์ที่เรียก URL นี้จะดึงไฟล์จาก `main` โดยตรงในครั้งถัดไปที่รัน
-
-## 🔗 เอกสารอ้างอิงทางการ
-
-- Roblox HttpService: https://create.roblox.com/docs/reference/engine/classes/HttpService
-- Roblox UserInputService: https://create.roblox.com/docs/reference/engine/classes/UserInputService
-- Roblox Rich Text / Font Weight: https://create.roblox.com/docs/ui/rich-text
-
-## 🏁 สรุปการใช้งานแบบเร็ว
-
-```text
-1. โหลด Library จาก GitHub Raw API
-2. สร้างแท็บปกติด้วย Library:CreateTab()
-3. ใช้ Settings Tab ที่ชื่อ “ตั้งค่า GUI” ท้าย Sidebar
-4. ปรับ ขนาด UI / ขนาดตัวอักษร / ความหนา / สี
-5. กด “บันทึกการตั้งค่า”
-6. ครั้งต่อไป Library จะพยายามโหลดค่าที่เซฟไว้ให้อัตโนมัติ
-7. ต้องการคืนค่า → “รีเซ็ตกลับค่าเดิม”
-```
-
 ---
 
-**RUNLUA HUB • GUI Library**  
-Built for a clean, configurable, responsive UI workflow.
+# 🏁 RUNLUA HUB
+
+**Unified UI • V1 Function Migration • Settings System • Save/Load • Responsive Sidebar**
+
+รุ่นนี้ตั้งใจให้ `UILibrary.lua` เป็นไฟล์กลางของ UI Library และให้ฟังก์ชันจาก V1 อยู่ภายใน UI รุ่นใหม่ทั้งหมด
