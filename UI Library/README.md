@@ -1,7 +1,7 @@
 # RUNLUA HUB UI Library — README
 
 คู่มือการใช้งานไลบรารี UI สำหรับ Roblox Luau  
-เอกสารนี้อ้างอิงจาก `UILibrary_Fixed_PC_Keybind_Drag.lua` เวอร์ชันที่ให้มา
+เอกสารนี้อ้างอิงจาก โหลดAPI ไลบราลี่ จาก https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua เวอร์ชันที่ให้มา
 
 ## สารบัญ
 
@@ -49,7 +49,7 @@
 นำไฟล์ไลบรารีไปไว้ในตำแหน่งที่สคริปต์ของคุณเข้าถึงได้ แล้วโหลดให้ได้ค่า `Library` ก่อนเรียก API ตัวอย่างนี้ใช้ `loadstring`/`game:HttpGet` ซึ่งใช้ได้เฉพาะสภาพแวดล้อมที่อนุญาตให้เรียกใช้งานรูปแบบดังกล่าว และ URL ต้องชี้ไปยังไฟล์ Lua จริง
 
 ```lua
-local Library = loadstring(game:HttpGet("RAW_URL_ของไฟล์ไลบรารี"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"))()
 ```
 
 หากคุณจัดเก็บไฟล์ไว้ใน ModuleScript ของโปรเจกต์ Roblox ให้ใช้ `require(ModuleScript)` แทนตามโครงสร้างโปรเจกต์ของคุณ
