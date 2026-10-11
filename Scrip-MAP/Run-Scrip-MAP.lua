@@ -14,6 +14,11 @@ local games = {
         ShortName = "ฆาตกรรมลึกลับ 2",
         URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/Mysterious%20Murder%202/obf25.txt"
     },
+    ["107778070777162"] = {
+        Name = "Steal An Egg",
+        ShortName = "ขโมยไข่",
+        URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/Steal-An-Egg/Stea.lua"
+    },
     ["100068273119174"] = {
         Name = "Clean all the Leaves",
         ShortName = "ทำความสะอาดใบไม้ทั้งหมด",
