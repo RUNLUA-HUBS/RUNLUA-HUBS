@@ -1,674 +1,811 @@
-# RUNLUA HUB • UI Library
+# RUNLUA HUB UI Library — README
 
-UI Library สำหรับ Roblox แบบ Sidebar + Scrolling Pages พร้อมระบบ Responsive, PC/Mobile, Notifications, Components และหมวด **ตั้งค่า GUI** แยกจากหมวดทั่วไป
+คู่มือการใช้งานไลบรารี UI สำหรับ Roblox Luau  
+เอกสารนี้อ้างอิงจาก `UILibrary_Fixed_PC_Keybind_Drag.lua` เวอร์ชันที่ให้มา
 
-## 🚀 โหลด Library จาก GitHub
+## สารบัญ
 
-ใช้ Loader นี้ได้เลย:
-
-```lua
-local Library = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"
-))()
-```
-
-ไฟล์หลักที่ Loader เรียกคือ:
-
-```text
-UI Library/UILibrary.lua
-```
-
-เมื่อโหลดเสร็จ Library จะถูกคืนค่ากลับมา และเก็บไว้ที่ `_G.RUNLUA_HUB` ด้วย โดย API หลักของ Library มี `CreateTab`, `CreateSection`, `CreateDivider`, `CreateToggle`, `CreateButton`, `CreateSlider`, `CreateInput`, `CreateKeybind`, `CreateDropdown`, `CreateLabel`, `CreateParagraph`, `CreatePlayerList`, `Notify`, `Show`, `Hide`, `Destroy` และ `Settings` fileciteturn6file0L2380-L2477
-
----
-
-## ✨ ความสามารถ
-
-- Sidebar สำหรับสลับหมวด
-- Scrolling Page สำหรับแต่ละแท็บ
-- Responsive Layout สำหรับพื้นที่หน้าจอหลายขนาด
-- รองรับ PC / Mobile
-- หน้าต่างลากได้
-- ปุ่ม Logo สำหรับเปิด/ซ่อน UI
-- Animation / Hover / Notification
-- Toggle / Button / Slider / Input / Keybind / Dropdown
-- Label / Paragraph / Divider / Section
-- Player List พร้อม Avatar และการเลือกผู้เล่น
-- หมวด **ตั้งค่า GUI** แยกเป็นหมวดพิเศษ
-- ปรับขนาด UI
-- ปรับขนาดตัวอักษร
-- ปรับความหนาตัวอักษร
-- เปลี่ยนสีธีม
-- ตั้งสีด้วย HEX
-- Save / Load / Reset การตั้งค่า
-- บันทึกตำแหน่งหน้าต่างและปุ่ม Logo
-
-ระบบจัดการขนาดและตัวอักษรใช้การแยกค่าพื้นฐานของ TextSize แล้วคูณด้วย Text Scale เพื่อไม่ให้ขยายซ้ำเมื่อปรับค่าหลายครั้ง fileciteturn6file0L198-L210
+1. [ภาพรวม](#ภาพรวม)
+2. [เริ่มต้นใช้งาน](#เริ่มต้นใช้งาน)
+3. [ระบบแท็บและ Section](#ระบบแท็บและ-section)
+4. [คอมโพเนนต์ทั้งหมด](#คอมโพเนนต์ทั้งหมด)
+5. [ระบบคีย์ลัด](#ระบบคีย์ลัด)
+6. [เปิด/ซ่อน GUI และการลากหน้าต่าง](#เปิดซ่อน-gui-และการลากหน้าต่าง)
+7. [การแจ้งเตือน](#การแจ้งเตือน)
+8. [Theme และ Config](#theme-และ-config)
+9. [การตั้งค่าและบันทึกข้อมูล](#การตั้งค่าและบันทึกข้อมูล)
+10. [Player List](#player-list)
+11. [จัดการไลบรารีและ Cleanup](#จัดการไลบรารีและ-cleanup)
+12. [ตัวอย่างโปรเจกต์](#ตัวอย่างโปรเจกต์)
+13. [ข้อควรทราบและการแก้ปัญหา](#ข้อควรทราบและการแก้ปัญหา)
 
 ---
 
-# 📑 สร้างแท็บ
+## ภาพรวม
+
+ไลบรารีนี้สร้างหน้าต่าง UI ธีมสีน้ำเงินเข้ม มี Sidebar สำหรับเปลี่ยนแท็บ, หน้าคอนเทนต์แบบเลื่อน, ปุ่ม Toggle, Button, Slider, Input, Keybind, Dropdown, Label, Paragraph และ Player List
+
+ความสามารถที่มีในซอร์ส:
+- สร้างแท็บและ Section เพื่อจัดกลุ่ม UI
+- ปุ่ม Toggle พร้อม callback เมื่อเปิด/ปิด
+- ปุ่ม Button สำหรับเรียก callback
+- Slider ที่กำหนด Min, Max, Step และ Suffix ได้
+- Input สำหรับรับข้อความ
+- Keybind ที่ตั้งคีย์ใหม่ได้จาก UI
+- Dropdown สำหรับเลือกค่าจากรายการ
+- Label และ Paragraph สำหรับแสดงข้อความ
+- Player List แสดงผู้เล่นอื่นพร้อม Avatar และข้อมูลเลือด
+- Notification แบบเข้าคิว
+- ปุ่มลอยโลโก้ (Toggle Pill) สำหรับเปิด/ซ่อนหน้าต่าง และลากตำแหน่งได้
+- คีย์ลัดเปิด/ซ่อน GUI บน PC และตั้งคีย์ใหม่ได้
+- หน้า Settings สำหรับปรับหน้าตา/การตั้งค่าที่ไลบรารีรองรับ
+- API สำหรับ Get/Save/Load/Reset/Apply ค่าตั้งค่า
+- Cleanup connections และลบ UI เมื่อสั่ง Destroy
+
+> หมายเหตุ: README นี้อธิบาย API ที่พบในไฟล์เท่านั้น ไม่ได้ยืนยันว่าทุกฟังก์ชันได้ผ่านการทดสอบใน Roblox Studio หรือทุก executor
+
+## เริ่มต้นใช้งาน
+
+นำไฟล์ไลบรารีไปไว้ในตำแหน่งที่สคริปต์ของคุณเข้าถึงได้ แล้วโหลดให้ได้ค่า `Library` ก่อนเรียก API ตัวอย่างนี้ใช้ `loadstring`/`game:HttpGet` ซึ่งใช้ได้เฉพาะสภาพแวดล้อมที่อนุญาตให้เรียกใช้งานรูปแบบดังกล่าว และ URL ต้องชี้ไปยังไฟล์ Lua จริง
 
 ```lua
-local Home = Library:CreateTab({
+local Library = loadstring(game:HttpGet("RAW_URL_ของไฟล์ไลบรารี"))()
+```
+
+หากคุณจัดเก็บไฟล์ไว้ใน ModuleScript ของโปรเจกต์ Roblox ให้ใช้ `require(ModuleScript)` แทนตามโครงสร้างโปรเจกต์ของคุณ
+
+### สร้างแท็บและเพิ่มปุ่มแรก
+
+```lua
+local Library = loadstring(game:HttpGet("RAW_URL_ของไฟล์ไลบรารี"))()
+
+local MainTab = Library.CreateTab({
     Name = "หน้าหลัก",
     Icon = Library.Icons.Home,
 })
-```
 
-สร้างได้หลายแท็บ:
-
-```lua
-local Main = Library:CreateTab({
-    Name = "หลัก",
-    Icon = Library.Icons.Home,
+local Section = Library.CreateSection(MainTab.Page, {
+    Name = "MainSection",
+    Title = "เมนูหลัก",
 })
 
-local Player = Library:CreateTab({
-    Name = "ผู้เล่น",
-    Icon = Library.Icons.Player,
-})
-
-local Tools = Library:CreateTab({
-    Name = "เครื่องมือ",
-    Icon = Library.Icons.Action,
-})
-```
-
-> หมวด `ตั้งค่า GUI` มีอยู่ใน Library อยู่แล้ว ไม่ต้องสร้างซ้ำ
-
----
-
-# 🧩 Components
-
-## Label
-
-```lua
-Library:CreateLabel(Home.Page, {
-    Text = "RUNLUA HUB",
-    Size = 15,
-    Bold = true,
-})
-```
-
-## Paragraph
-
-```lua
-Library:CreateParagraph(Home.Page, {
-    Text = "คำอธิบายรายละเอียดของระบบ",
-    Size = 11,
-})
-```
-
-## Section
-
-```lua
-local General = Library:CreateSection(Home.Page, {
-    Name = "General",
-    Title = "ระบบทั่วไป",
-})
-```
-
-จากนั้นใส่ Component ลงใน `General`
-
----
-
-# 🔘 Button
-
-```lua
-Library:CreateButton(General, {
-    Name = "ทดสอบระบบ",
-    Description = "กดเพื่อทดสอบ Callback",
-    Icon = Library.Icons.Action,
-
+Library.CreateButton(Section, {
+    Name = "ทดสอบ",
+    Description = "กดเพื่อแสดงข้อความแจ้งเตือน",
     Callback = function()
-        Library:Notify({
+        Library.Notify({
             Title = "RUNLUA HUB",
-            Message = "ทำงานแล้ว",
+            Message = "ปุ่มทำงานแล้ว!",
+            Duration = 3,
         })
     end,
 })
 ```
 
----
-
-# 🔘 Toggle
-
-```lua
-local Row, GetState, SetState = Library:CreateToggle(General, {
-    Name = "เปิดระบบ",
-    Description = "เปิดหรือปิดระบบ",
-    Default = false,
-
-    Callback = function(enabled)
-        print("State:", enabled)
-    end,
-})
-```
-
-อ่านสถานะ:
-
-```lua
-local enabled = GetState()
-```
-
-เปลี่ยนสถานะ:
-
-```lua
-SetState(true)
-```
+`CreateTab()` คืนค่าเป็นตารางแท็บ ซึ่งมี `Page` สำหรับวางคอมโพเนนต์ลงในหน้าของแท็บนั้น ส่วน `CreateSection()` คืนค่า Frame ที่ใช้เป็น parent ของคอมโพเนนต์
 
 ---
 
-# 🎚️ Slider
+## ระบบแท็บและ Section
 
-```lua
-local Row, GetValue, SetValue = Library:CreateSlider(General, {
-    Name = "ความเร็ว",
-    Min = 0,
-    Max = 100,
-    Step = 1,
-    Default = 50,
-    Suffix = "%",
+### `Library.CreateTab(opts)`
 
-    Callback = function(value)
-        print("Value:", value)
-    end,
-})
-```
+สร้างแท็บใหม่และคืนค่าตารางแท็บ
 
-อ่านค่า:
-
-```lua
-local value = GetValue()
-```
-
-ตั้งค่า:
-
-```lua
-SetValue(75)
-```
-
----
-
-# ✏️ Input
-
-```lua
-local Row, GetText, SetText = Library:CreateInput(General, {
-    Name = "ชื่อ",
-    Placeholder = "พิมพ์ชื่อ...",
-    Default = "",
-
-    Callback = function(text)
-        print(text)
-    end,
-})
-```
-
-อ่านข้อความ:
-
-```lua
-local text = GetText()
-```
-
-ตั้งข้อความ:
-
-```lua
-SetText("RUNLUA")
-```
-
----
-
-# ⌨️ Keybind
-
-```lua
-local Row, GetKey, SetKey = Library:CreateKeybind(General, {
-    Name = "ปุ่มเปิดระบบ",
-    Default = Enum.KeyCode.E,
-
-    Callback = function(key)
-        print("New key:", key.Name)
-    end,
-})
-```
-
----
-
-# 🔽 Dropdown
-
-```lua
-local Row, GetOption, SetOption = Library:CreateDropdown(General, {
-    Name = "เลือกโหมด",
-    Options = {
-        "โหมด 1",
-        "โหมด 2",
-        "โหมด 3",
-    },
-    Default = "โหมด 1",
-
-    Callback = function(value)
-        print("Selected:", value)
-    end,
-})
-```
-
----
-
-# 👥 Player List
-
-```lua
-local Wrapper, RebuildPlayers, GetSelectedPlayer =
-    Library:CreatePlayerList(Home.Page, {
-        AccentColor = Library.Theme.Accent,
-
-        OnSelect = function(player)
-            print("เลือก:", player.Name)
-        end,
-    })
-```
-
-รีเฟรชรายชื่อ:
-
-```lua
-RebuildPlayers()
-```
-
-อ่านผู้เล่นที่เลือก:
-
-```lua
-local player = GetSelectedPlayer()
-```
-
----
-
-# 🔔 Notification
-
-```lua
-Library:Notify({
-    Title = "RUNLUA HUB",
-    Message = "ระบบทำงานแล้ว",
-    Duration = 3,
-    Color = Library.Theme.Success,
-    Icon = Library.Icons.Home,
-})
-```
-
-รองรับค่า:
-
-```text
-Title
-Message
-Duration
-Color
-Icon
-```
-
----
-
-# ⚙️ ตั้งค่า GUI
-
-หมวด **ตั้งค่า GUI** เป็นหมวดพิเศษของ Library และแยกจากแท็บระบบทั่วไปโดยอัตโนมัติ ระบบมีตัวควบคุมสำหรับขนาด UI, ขนาดตัวอักษร, น้ำหนักตัวอักษร และสีธีม fileciteturn0file0L447-L542
-
-## ขนาด UI
-
-ช่วงค่า:
-
-```text
-0.55x → 1.80x
-```
-
-## ขนาดตัวอักษร
-
-ช่วงค่า:
-
-```text
-0.75x → 1.75x
-```
-
-## ความหนาตัวอักษร
-
-```text
-Regular
-Medium
-SemiBold
-Bold
-ExtraBold
-Heavy
-```
-
-## สีธีม
-
-Preset ที่มี:
-
-```text
-น้ำเงินฟ้า
-ม่วงไฟฟ้า
-เขียวมรกต
-แดงคริมสัน
-ทอง
-ขาวดำ
-```
-
-นอกจากนี้สามารถใส่ HEX ได้ เช่น:
-
-```text
-#00A2FF
-#FF3355
-#FFFFFF
-```
-
----
-
-# 💾 Settings API
-
-API สำหรับระบบตั้งค่าอยู่ใน `Library.Settings` fileciteturn6file0L2429-L2477
-
-### อ่านค่าปัจจุบัน
-
-```lua
-local settings = Library.Settings.Get()
-```
-
-### บันทึก
-
-```lua
-local ok, result = Library.Settings.Save()
-print(ok, result)
-```
-
-### โหลด
-
-```lua
-local ok, result = Library.Settings.Load()
-print(ok, result)
-```
-
-### รีเซ็ตกลับค่าเดิม
-
-```lua
-Library.Settings.Reset()
-```
-
-### นำ Settings ที่มีอยู่มาใช้
-
-```lua
-Library.Settings.Apply(settings)
-```
-
-### ตรวจสอบ File Storage
-
-```lua
-local supported = Library.Settings.GetStorageAvailable()
-```
-
-ไฟล์เริ่มต้นของ Settings คือ:
-
-```text
-RUNLUA_HUB_SETTINGS.json
-```
-
-ระบบจะใช้ `isfile/readfile/writefile` เมื่อ Environment รองรับ และจะ fallback เป็น Memory Session เมื่อไม่รองรับ fileciteturn0file0L297-L320
-
----
-
-# 🎨 Theme API
-
-เข้าถึง Theme ได้จาก:
-
-```lua
-Library.Theme
-```
+| ตัวเลือก | ชนิด | ความหมาย |
+|---|---|---|
+| `Name` | string | ชื่อแท็บ |
+| `Icon` | function | ฟังก์ชันวาดไอคอน เช่น `Library.Icons.Home` |
+| `Order` | number | ลำดับแท็บใน Sidebar |
+| `IsSettings` | boolean | ใช้ทำแท็บประเภท Settings; ปกติไม่จำเป็นต้องตั้งเอง |
 
 ตัวอย่าง:
 
 ```lua
-print(Library.Theme.Accent)
-print(Library.Theme.Background)
-print(Library.Theme.Text)
+local FarmTab = Library.CreateTab({
+    Name = "ฟาร์ม",
+    Icon = Library.Icons.Run,
+    Order = 1,
+})
 ```
 
-Palette หลักมี:
+ค่าที่คืนมามี `Name`, `Index`, `Page`, `Button`, `Indicator`, `Label`, `IconHolder` และ `IsSettings`
 
-```text
-Background
-Surface
-SurfaceAlt
-SurfaceHover
-Accent
-AccentSoft
-AccentLight
-Text
-TextMuted
-Border
-Success
-Danger
-Warning
-SwitchOff
-Shadow
-White
-IconGradStart
-IconGradEnd
-IconGradAngle
-IconDim
+เปลี่ยนแท็บด้วย:
+
+```lua
+Library.SelectTab(FarmTab)
+```
+
+### `Library.CreateSection(parent, opts)`
+
+สร้างกลุ่มคอมโพเนนต์ในหน้าแท็บหรือใน parent ที่เป็น GUI object
+
+| ตัวเลือก | ชนิด | ความหมาย |
+|---|---|---|
+| `Name` | string | ชื่อ Section |
+| `Title` | string | หัวข้อที่แสดงด้านบน |
+| `Order` | number | ลำดับการแสดง |
+
+```lua
+local Section = Library.CreateSection(FarmTab.Page, {
+    Name = "FarmOptions",
+    Title = "ตั้งค่าการฟาร์ม",
+    Order = 1,
+})
+```
+
+### `Library.CreateDivider(parent, order)`
+
+สร้างเส้นคั่นแนวนอน:
+
+```lua
+Library.CreateDivider(Section, 10)
 ```
 
 ---
 
-# 🖼️ Icons
+## คอมโพเนนต์ทั้งหมด
 
-ตัวอย่าง Icon ที่มี:
+คอมโพเนนต์ด้านล่างส่วนใหญ่รับ `parent` เป็นอาร์กิวเมนต์แรก และตาราง `opts` เป็นอาร์กิวเมนต์ที่สอง
+
+### 1. Toggle — `Library.CreateToggle(parent, opts)`
+
+สวิตช์เปิด/ปิด คืนค่า 3 ค่า: `row`, `getValue`, `setValue`
+
+ตัวเลือก:
+- `Name`: ชื่อสวิตช์
+- `Description`: คำอธิบาย (ไม่ใส่ก็ได้)
+- `Default`: ค่าเริ่มต้นแบบ boolean
+- `Callback`: ฟังก์ชันที่ถูกเรียกพร้อมสถานะ `true`/`false`
+- `Icon`: ฟังก์ชันวาดไอคอน
+- `Order`: ลำดับ
 
 ```lua
-Library.Icons.Home
-Library.Icons.Settings
-Library.Icons.Player
-Library.Icons.ESP
-Library.Icons.Teleport
-Library.Icons.Fling
-Library.Icons.Save
-Library.Icons.Cloud
+local ToggleRow, GetEnabled, SetEnabled = Library.CreateToggle(Section, {
+    Name = "เปิดระบบตัวอย่าง",
+    Description = "เปิดหรือปิดระบบนี้",
+    Default = false,
+    Callback = function(enabled)
+        print("สถานะ:", enabled)
+    end,
+})
+
+-- อ่านค่า
+print(GetEnabled())
+
+-- เปลี่ยนค่าโดยโค้ด
+SetEnabled(true)
+```
+
+ข้อสำคัญ: `SetEnabled(value)` อัปเดตสถานะและภาพของ Toggle แต่ในซอร์สปัจจุบันไม่ได้เรียก `Callback` เมื่อเปลี่ยนค่าผ่าน setter
+
+### 2. Button — `Library.CreateButton(parent, opts)`
+
+ปุ่มเรียกใช้งาน callback คืนค่า `row`
+
+ตัวเลือก:
+- `Name`: ชื่อปุ่ม
+- `Description`: คำอธิบาย (ไม่ใส่ก็ได้)
+- `Callback`: ฟังก์ชันที่เรียกเมื่อกด
+- `Color`: สีเน้นของปุ่ม
+- `Icon`: ฟังก์ชันวาดไอคอน
+- `Order`: ลำดับ
+
+```lua
+Library.CreateButton(Section, {
+    Name = "ทำงาน",
+    Description = "เรียกการทำงานหนึ่งครั้ง",
+    Callback = function()
+        print("Button clicked")
+    end,
+})
+```
+
+### 3. Slider — `Library.CreateSlider(parent, opts)`
+
+แถบเลื่อนตัวเลข คืนค่า `row`, `getValue`, `setValue`
+
+ตัวเลือก:
+- `Name`: ชื่อ
+- `Min`: ค่าต่ำสุด (ค่าเริ่มต้น 0)
+- `Max`: ค่าสูงสุด (ค่าเริ่มต้น 100)
+- `Step`: ระยะการเพิ่ม/ลด (ค่าเริ่มต้น 1)
+- `Default`: ค่าเริ่มต้น
+- `Suffix`: ข้อความต่อท้ายค่า เช่น `%` หรือ ` studs`
+- `Format`: ฟังก์ชันกำหนดข้อความแสดงผล รับค่าแล้วคืน string
+- `Callback`: เรียกเมื่อค่าถูกเปลี่ยน
+- `Icon`: ฟังก์ชันวาดไอคอน
+- `Order`: ลำดับ
+
+```lua
+local SliderRow, GetSpeed, SetSpeed = Library.CreateSlider(Section, {
+    Name = "ความเร็ว",
+    Min = 1,
+    Max = 100,
+    Step = 1,
+    Default = 16,
+    Suffix = "",
+    Callback = function(value)
+        print("ค่าปัจจุบัน:", value)
+    end,
+})
+
+print(GetSpeed())
+SetSpeed(25)
+```
+
+`SetSpeed(value)` จำกัดค่าให้อยู่ระหว่าง Min และ Max และอัปเดตภาพ/ค่า แต่ไม่เรียก callback ตามโค้ดปัจจุบัน
+
+### 4. Input — `Library.CreateInput(parent, opts)`
+
+ช่องรับข้อความ คืนค่า `row`, `getText`, `setText`
+
+ตัวเลือก:
+- `Name`: ชื่อช่อง
+- `Placeholder`: ข้อความตัวอย่างในช่อง
+- `Default`: ข้อความเริ่มต้น
+- `ClearOnFocus`: ล้างข้อความเมื่อเลือกช่อง
+- `Callback`: เรียกเมื่อช่องเสีย Focus (เช่น กด Enter หรือคลิกออก ตามพฤติกรรม TextBox)
+- `Icon`: ฟังก์ชันวาดไอคอน
+- `Order`: ลำดับ
+
+```lua
+local InputRow, GetText, SetText = Library.CreateInput(Section, {
+    Name = "ชื่อผู้เล่น",
+    Placeholder = "พิมพ์ชื่อ...",
+    Default = "",
+    ClearOnFocus = false,
+    Callback = function(text)
+        print("ข้อความ:", text)
+    end,
+})
+
+SetText("Example")
+print(GetText())
+```
+
+### 5. Keybind — `Library.CreateKeybind(parent, opts)`
+
+สร้างช่องตั้งคีย์ลัดสำหรับฟังก์ชันที่คุณกำหนดเอง คืนค่า `row`, `getKey`, `setKey`
+
+ตัวเลือก:
+- `Name`: ชื่อคีย์ลัด
+- `Default`: คีย์เริ่มต้น เช่น `Enum.KeyCode.E`
+- `Callback`: ฟังก์ชันที่เรียกเมื่อกดคีย์ที่ตั้งไว้
+- `Icon`: ฟังก์ชันวาดไอคอน
+- `Order`: ลำดับ
+
+```lua
+local KeyRow, GetKey, SetKey = Library.CreateKeybind(Section, {
+    Name = "เปิดระบบตัวอย่าง",
+    Default = Enum.KeyCode.E,
+    Callback = function(keyCode)
+        print("กดคีย์:", keyCode.Name)
+        -- เรียกเฉพาะฟังก์ชันที่ต้องการให้คีย์นี้ควบคุม
+    end,
+})
+
+-- อ่านคีย์ที่เลือก
+print(GetKey().Name)
+
+-- ตั้งคีย์ผ่านโค้ด
+SetKey(Enum.KeyCode.F)
+```
+
+วิธีเปลี่ยนคีย์จาก UI: คลิกปุ่มที่แสดงชื่อคีย์ จากนั้นกดคีย์บอร์ดที่ต้องการเพื่อบันทึกคีย์ใหม่
+
+**ระบบนี้ไม่ผูกคีย์ลัดให้ทุกฟังก์ชันโดยอัตโนมัติ** แต่ละ `CreateKeybind` จะเรียกเฉพาะ `Callback` ที่กำหนดให้กับ Keybind ตัวนั้นเท่านั้น จึงควรสร้าง Keybind เฉพาะฟังก์ชันที่ต้องการให้มีคีย์ลัด
+
+หมายเหตุจากโค้ด: handler คีย์ลัดตรวจ `gameProcessed` (`gp`) และจะไม่เรียก callback เมื่อ Roblox หรือ UI อื่นประมวลผล input นั้นไปแล้ว
+
+### 6. Dropdown — `Library.CreateDropdown(parent, opts)`
+
+รายการตัวเลือกแบบกดเพื่อเปิด/ปิดรายการ คืนค่า `wrapper`, `getValue`, `setValue`
+
+ตัวเลือก:
+- `Name`: ชื่อรายการ
+- `Options`: array ของค่าที่เลือกได้
+- `Default`: ค่าเริ่มต้น (หากไม่ระบุจะใช้ตัวเลือกแรก)
+- `Callback`: เรียกพร้อมค่าที่เลือก
+- `Icon`: ฟังก์ชันวาดไอคอน
+- `Order`: ลำดับ
+
+```lua
+local DropdownRow, GetChoice, SetChoice = Library.CreateDropdown(Section, {
+    Name = "โหมด",
+    Options = {"ปกติ", "เร็ว", "ประหยัด"},
+    Default = "ปกติ",
+    Callback = function(choice)
+        print("เลือก:", choice)
+    end,
+})
+
+print(GetChoice())
+SetChoice("เร็ว")
+```
+
+`SetChoice(value)` เปลี่ยนค่าที่แสดง แต่ไม่ได้เรียก callback ตามโค้ดปัจจุบัน ควรใช้ค่าที่มีอยู่ใน `Options`
+
+### 7. Label — `Library.CreateLabel(parent, opts)`
+
+ข้อความสั้น ๆ แบบบรรทัดเดียว คืนค่า TextLabel
+
+ตัวเลือก:
+- `Text`: ข้อความ
+- `Color`: สีข้อความ
+- `Size`: ขนาดข้อความ
+- `Height`: ความสูง
+- `Bold`: `true` เพื่อใช้ตัวหนา
+- `Align`: เช่น `Enum.TextXAlignment.Left`, `.Center`, `.Right`
+- `Order`: ลำดับ
+
+```lua
+local StatusLabel = Library.CreateLabel(Section, {
+    Text = "สถานะ: พร้อม",
+    Size = 12,
+    Height = 18,
+    Bold = true,
+    Color = Library.Theme.Success,
+})
+```
+
+เปลี่ยนข้อความภายหลังได้ด้วย `StatusLabel.Text = "ข้อความใหม่"`
+
+### 8. Paragraph — `Library.CreateParagraph(parent, opts)`
+
+ข้อความหลายบรรทัดที่ตัดบรรทัดอัตโนมัติ คืนค่า TextLabel
+
+ตัวเลือก:
+- `Text`: ข้อความ
+- `Color`: สีข้อความ
+- `Size`: ขนาดข้อความ
+- `Order`: ลำดับ
+
+```lua
+local Info = Library.CreateParagraph(Section, {
+    Text = "ข้อความอธิบายระบบนี้ สามารถยาวได้และตัดบรรทัดอัตโนมัติ",
+    Size = 11,
+    Color = Library.Theme.TextMuted,
+})
+```
+
+เปลี่ยนข้อความภายหลังได้ด้วย `Info.Text = "ข้อความใหม่"`
+
+### 9. Player List — `Library.CreatePlayerList(parent, opts)`
+
+สร้างรายชื่อผู้เล่นอื่นในเซิร์ฟเวอร์พร้อมรูป Avatar, Display Name, Username และแถบเลือดตามข้อมูลตัวละคร คืนค่า wrapper ของรายการ
+
+ตัวเลือกที่พบในซอร์ส:
+- `OnSelect`: callback เมื่อเลือกผู้เล่น โดยรับผู้เล่น (`Player`) ที่เลือก
+- `AccentColor`: สีเน้นสำหรับผู้เล่นที่ถูกเลือก
+- `Order`: ลำดับ
+
+```lua
+local PlayerList = Library.CreatePlayerList(Section, {
+    AccentColor = Library.Theme.Accent,
+    OnSelect = function(player)
+        if player then
+            print("เลือกผู้เล่น:", player.Name, player.UserId)
+        end
+    end,
+})
+```
+
+รายการสร้างจาก `Players:GetPlayers()` และไม่นำ LocalPlayer มาแสดง รายการอัปเดตตามการเข้าร่วม/ออกจากเซิร์ฟเวอร์ตาม connections ภายในคอมโพเนนต์ โปรดใช้ `OnSelect` เพื่อเก็บผู้เล่นที่ผู้ใช้เลือก ไม่ควรสมมติว่า `CreatePlayerList` คืนค่า `getSelectedPlayer` เพราะซอร์สคืนค่าเป็น wrapper เท่านั้น
+
+---
+
+## ระบบคีย์ลัด
+
+มีคีย์ลัดอยู่ 2 ประเภท แยกจากกันชัดเจน:
+
+1. **คีย์ลัดเปิด/ซ่อนหน้าต่างหลัก** — ตั้งผ่าน `Library.SetToggleKey(...)`
+2. **คีย์ลัดเฉพาะฟังก์ชัน** — สร้างด้วย `Library.CreateKeybind(...)` และกำหนด `Callback` ของฟังก์ชันนั้น
+
+### เปลี่ยนคีย์ลัด GUI
+
+คีย์เริ่มต้นของ GUI ในไฟล์นี้คือ `RightShift`
+
+```lua
+-- เปลี่ยนเป็น RightControl
+local ok = Library.SetToggleKey(Enum.KeyCode.RightControl)
+
+-- อ่านคีย์ปัจจุบัน
+local currentKey = Library.GetToggleKey()
+print(currentKey.Name)
+```
+
+`SetToggleKey` รับ `Enum.KeyCode` เท่านั้น หากส่งค่าไม่ถูกต้องจะคืน `false`; หากตั้งได้จะคืน `true`
+
+### สร้างคีย์ลัดให้เฉพาะฟังก์ชันที่ต้องการ
+
+```lua
+Library.CreateKeybind(Section, {
+    Name = "สลับโหมด",
+    Default = Enum.KeyCode.G,
+    Callback = function()
+        -- ใส่เฉพาะการทำงานของฟังก์ชันนี้
+        print("สลับโหมดแล้ว")
+    end,
+})
+```
+
+อย่าสร้าง `InputBegan` แยกซ้ำ ๆ ให้ทุกฟังก์ชันโดยไม่จำเป็น ใช้ `CreateKeybind` เพื่อให้ UI แสดงคีย์และผู้ใช้เปลี่ยนคีย์ได้จากปุ่มเดียวกัน
+
+ข้อจำกัด: Keybind ปัจจุบันตรวจจับคีย์บอร์ดบน PC ไม่ใช่ระบบปุ่มสัมผัสบนมือถือ และ input ที่ `gameProcessed` เป็น `true` จะถูกข้าม
+
+---
+
+## เปิด/ซ่อน GUI และการลากหน้าต่าง
+
+### API ที่ใช้ได้
+
+```lua
+Library.Show() -- แสดงหน้าต่างหลัก
+Library.Hide() -- ซ่อนหน้าต่างหลัก แต่ปุ่มโลโก้ลอยยังอยู่
+```
+
+- PC: ค่าเริ่มต้นกด `RightShift` เพื่อเปิด/ซ่อน GUI
+- เปลี่ยนปุ่มได้ด้วย `Library.SetToggleKey(Enum.KeyCode.RightControl)` เป็นต้น
+- ปุ่มโลโก้ลอย (`TogglePill`) ใช้เปิด/ซ่อนหน้าต่างและลากย้ายตำแหน่งได้
+- บน PC สามารถคลิกซ้ายค้างบริเวณโลโก้หรือพื้นที่ว่างของแถบด้านบนแล้วลากได้
+- บนมือถือใช้การสัมผัสลากบริเวณที่กำหนด
+- มุมขวาล่างของหน้าต่างมีจุดจับสำหรับปรับขนาด UI
+
+อย่าลืมว่าปุ่มย่อหน้าต่างเป็นการซ่อนหน้าต่าง ไม่ใช่การทำลาย UI ส่วนปุ่มปิด (X) จะเรียก cleanup และทำลาย UI
+
+---
+
+## การแจ้งเตือน
+
+### `Library.Notify(opts)`
+
+แสดง Notification โดยจัดคิวและจำกัดจำนวนที่แสดงพร้อมกันตาม Config
+
+ตัวเลือก:
+- `Title`: หัวข้อ
+- `Message`: เนื้อหา
+- `Duration`: เวลาที่แสดง
+- `Color`: สีเน้น
+- `Icon`: ฟังก์ชันวาดไอคอน
+
+```lua
+Library.Notify({
+    Title = "RUNLUA HUB",
+    Message = "ทำงานสำเร็จ",
+    Duration = 3.5,
+    Color = Library.Theme.Success,
+    Icon = Library.Icons.Correct,
+})
+```
+
+หากไม่ระบุ จะใช้ค่าปริยายจากไลบรารี เช่น Title `RUNLUA HUB`, Duration 3 วินาที และสี Accent
+
+---
+
+## Theme และ Config
+
+### `Library.Theme`
+
+ตารางสีที่ UI ใช้ สามารถเปลี่ยนสีแล้วเรียกใช้กับคอมโพเนนต์ใหม่ได้ ตัวอย่าง:
+
+```lua
+Library.Theme.Accent = Color3.fromRGB(0, 170, 255)
+Library.Theme.Background = Color3.fromRGB(8, 10, 18)
+```
+
+สีหลักที่มีในไฟล์:
+`Background`, `Surface`, `SurfaceAlt`, `SurfaceHover`, `Accent`, `AccentSoft`, `AccentLight`, `Text`, `TextMuted`, `Border`, `Success`, `Danger`, `Warning`, `SwitchOff`, `Shadow`, `White`, `IconGradStart`, `IconGradEnd`, `IconGradAngle`, `IconDim`
+
+ไลบรารีมีระบบผูกสีให้กับองค์ประกอบ UI และหน้า Settings มีตัวควบคุมธีมอยู่ด้วย อย่างไรก็ตาม การเปลี่ยนค่าในตาราง Theme ด้วยตัวเองหลังสร้าง UI แล้วไม่ได้รับประกันว่า UI ทุกชิ้นที่สร้างไปแล้วจะเปลี่ยนทันทีในทุกกรณี
+
+### `Library.Config`
+
+ค่าปรับแต่ง UI ภายใน เช่น:
+- `WindowSize`, `WindowMinSize`
+- `SidebarWidth`, `SidebarWidthCompact`, `CompactBreakpoint`
+- `HeaderHeight`, `RowHeight`, `RowHeightDesc`, `RowSpacing`, `Padding`
+- `CornerRadius`
+- `AnimFast`, `AnimNormal`, `AnimSlow`
+- `MaxNotifications`, `DragThreshold`, `ToggleDebounce`
+
+```lua
+print(Library.Config.WindowSize)
+print(Library.Config.MaxNotifications)
+```
+
+ค่าเหล่านี้เป็นค่าระดับไลบรารี อย่าแก้โดยไม่เข้าใจผลกระทบต่อ Layout
+
+### `Library.Icons`
+
+ตารางฟังก์ชันวาดไอคอนที่ไลบรารีใช้ ตัวอย่างเช่น:
+
+```lua
+Icon = Library.Icons.Home
+Icon = Library.Icons.Settings
+Icon = Library.Icons.Run
+Icon = Library.Icons.Pencil
+Icon = Library.Icons.Correct
+```
+
+ใช้เฉพาะชื่อไอคอนที่มีจริงใน `Library.Icons` ของไฟล์ที่ใช้อยู่ หากส่งค่า `Icon` ให้คอมโพเนนต์ ต้องเป็นฟังก์ชันวาดไอคอนตามรูปแบบของไลบรารี ไม่ใช่ string หรือ Asset ID ตรง ๆ
+
+---
+
+## การตั้งค่าและบันทึกข้อมูล
+
+ไลบรารีเปิด API ไว้ที่ `Library.Settings`
+
+```lua
+local Settings = Library.Settings
+
+local data = Settings.Get()
+print(data.Version)
+
+local saved = Settings.Save()
+local loaded = Settings.Load()
+Settings.Reset()
+Settings.Apply(data)
+print(Settings.GetStorageAvailable())
+```
+
+เมธอดที่มี:
+- `Get()` — รวบรวมค่าตั้งค่าปัจจุบันเป็น table
+- `Save()` — บันทึกค่าตั้งค่าผ่านระบบ storage ที่ไลบรารีตรวจพบ
+- `Load()` — โหลดข้อมูลตั้งค่าจาก storage ที่รองรับ
+- `Reset()` — รีเซ็ตค่าตั้งค่าตามระบบของไลบรารี
+- `Apply(data)` — นำ table ที่ส่งเข้ามาไปใช้เป็นค่าตั้งค่า คืนผลสำเร็จ/ไม่สำเร็จตามการตรวจสอบภายใน
+- `GetStorageAvailable()` — ตรวจว่าพบ file storage ที่ไลบรารีใช้ได้หรือไม่
+- `FileName` — ชื่อไฟล์ที่ใช้เก็บการตั้งค่า
+- `Version` — เวอร์ชันโครงสร้างข้อมูลตั้งค่า
+
+ข้อมูลที่รวบรวมมีค่าขนาดตัวอักษร, น้ำหนักฟอนต์, สี Theme และตำแหน่งหน้าต่าง/ปุ่มโลโก้ตามโครงสร้างที่เขียนไว้ในซอร์ส
+
+**ข้อควรทราบ:** การบันทึกลงไฟล์ขึ้นกับความสามารถของสภาพแวดล้อมที่รันอยู่ หากไม่มี API file storage ที่ไลบรารีตรวจพบ การ Save/Load อาจไม่สามารถใช้ได้ ตรวจด้วย `Settings.GetStorageAvailable()` ก่อน อย่าถือว่าการตั้งค่าถูกบันทึกถาวรแล้วหากยังไม่ได้ตรวจผลลัพธ์
+
+ตัวอย่างเช็กก่อนบันทึก:
+
+```lua
+if Library.Settings.GetStorageAvailable() then
+    local ok = Library.Settings.Save()
+    print("Save result:", ok)
+else
+    warn("สภาพแวดล้อมนี้ไม่มี file storage ที่ไลบรารีรองรับ")
+end
 ```
 
 ---
 
-# 🪟 เปิด / ซ่อน / ทำลาย UI
+## Player List
 
-แสดง:
+`CreatePlayerList` สร้างรายการผู้เล่นอื่นจากเซิร์ฟเวอร์ปัจจุบัน และแสดงข้อมูลพื้นฐานที่ UI อ่านได้ เช่น Avatar, Display Name, Username และเลือดของตัวละครเมื่อมี Humanoid
 
-```lua
-Library:Show()
-```
-
-ซ่อน:
+ตัวอย่างเลือกผู้เล่น:
 
 ```lua
-Library:Hide()
+local selectedPlayer
+
+Library.CreatePlayerList(Section, {
+    OnSelect = function(player)
+        selectedPlayer = player
+        if selectedPlayer then
+            print(selectedPlayer.Name)
+        end
+    end,
+})
 ```
 
-ทำลายและ Cleanup:
-
-```lua
-Library:Destroy()
-```
+ก่อนใช้ข้อมูลตัวละคร ควรตรวจสอบว่า `player.Character` และ `Humanoid` ยังมีอยู่ เพราะตัวละครอาจกำลังเกิดใหม่หรือไม่มี Humanoid ชั่วคราว
 
 ---
 
-# 📱 PC / Mobile
+## จัดการไลบรารีและ Cleanup
 
-Library ตรวจจับ Platform และปรับ Layout ตามพื้นที่หน้าจอ โดยมี `Library.IsMobile` และ `Library.Platform` ให้ตรวจสอบได้ fileciteturn6file0L15-L31
+API หลักที่คืนมาจากไฟล์:
 
-```lua
-print(Library.Platform)
-print(Library.IsMobile)
-```
+| API | การทำงาน |
+|---|---|
+| `Library.Show()` | แสดงหน้าต่างหลัก |
+| `Library.Hide()` | ซ่อนหน้าต่างหลัก |
+| `Library.Destroy()` | ตัด connections ที่ไลบรารีติดตามและทำลาย ScreenGui |
+| `Library.SelectTab(tab)` | เปลี่ยนไปยังแท็บที่สร้างไว้ |
+| `Library.SetToggleKey(keyCode)` | ตั้งคีย์เปิด/ซ่อน GUI |
+| `Library.GetToggleKey()` | อ่านคีย์เปิด/ซ่อน GUI |
+| `Library.IsMobile` | บอกว่าไลบรารีตรวจพบว่าเป็นอุปกรณ์มือถือหรือไม่ |
+| `Library.Platform` | ชื่อแพลตฟอร์มที่ตรวจพบ |
+| `Library.ScreenGui` | อ้างอิง ScreenGui ของไลบรารี |
+| `Library.MainFrame` | อ้างอิงหน้าต่างหลัก |
+| `Library.SettingsTab` | อ้างอิงแท็บตั้งค่าที่สร้างไว้ |
+| `_G.RUNLUA_HUB` | ตัวแปร global ที่ไลบรารีกำหนดให้ชี้ไปยัง Library |
 
-เมื่อหน้าจอแคบ Sidebar จะเข้าสู่ Compact Mode เพื่อช่วยลดปัญหาข้อความและ Component ชนกัน fileciteturn6file0L607-L610
-
----
-
-# 🖱️ การลาก UI
-
-### PC
-
-ลากจาก Header ด้วย:
-
-```text
-คลิกขวา + ลาก
-```
-
-### Mobile
-
-```text
-แตะค้าง + ลาก
-```
-
-ระบบ Drag มี threshold เพื่อแยกการลากออกจากการกด และมีการป้องกันการจับ Input ซ้อนกัน fileciteturn6file0L724-L832
-
-ปุ่ม Logo ใช้สำหรับเปิด / ซ่อนหน้าต่าง
-
----
-
-# 🧹 Cleanup
-
-เรียก:
+ตัวอย่างปิดและล้าง UI:
 
 ```lua
-Library:Destroy()
+Library.Destroy()
 ```
 
-เพื่อปิด UI และตัด Connections ที่ Library จัดการไว้
+ซอร์สจะพยายาม cleanup ไลบรารีเก่าก่อนเริ่มสร้าง instance ใหม่ หากมี `_G.RUNLUA_HUB_ACTIVE` และ `_G.RUNLUA_HUB_CLEANUP` อยู่แล้ว
+
+ไม่ควรเรียก `Destroy()` หากยังต้องการใช้งาน UI เดิมต่อ เพราะ ScreenGui จะถูกทำลาย
 
 ---
 
-# 🔄 อัปเดต Library บน GitHub
+## ตัวอย่างโปรเจกต์
 
-แก้ไฟล์:
-
-```text
-UI Library/UILibrary.lua
-```
-
-จากนั้น Commit + Push ขึ้น branch `main`
-
-Loader เดิมใช้ต่อได้ เพราะ URL ชี้ไปยังไฟล์เดิม:
-
-```text
-https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua
-```
-
-ดังนั้นโดยปกติผู้ใช้ไม่จำเป็นต้องเปลี่ยน Loader เมื่อคุณอัปเดตเฉพาะเนื้อหาของ `UILibrary.lua`
-
----
-
-# 🛠️ ตัวอย่างพร้อมใช้งาน
+ตัวอย่างนี้รวมแท็บ, Section, Toggle, Button, Slider, Input, Dropdown, Keybind, Label, Paragraph, Notification และคีย์เปิด/ซ่อน GUI:
 
 ```lua
-local Library = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"
-))()
+local Library = loadstring(game:HttpGet("RAW_URL_ของไฟล์ไลบรารี"))()
 
-local Main = Library:CreateTab({
+-- คีย์เปิด/ซ่อน GUI
+Library.SetToggleKey(Enum.KeyCode.RightShift)
+
+local MainTab = Library.CreateTab({
     Name = "หน้าหลัก",
     Icon = Library.Icons.Home,
 })
 
-local General = Library:CreateSection(Main.Page, {
-    Name = "General",
-    Title = "ระบบทั่วไป",
+local Section = Library.CreateSection(MainTab.Page, {
+    Name = "MainSection",
+    Title = "ตัวอย่างคอมโพเนนต์",
 })
 
-Library:CreateLabel(Main.Page, {
-    Text = "RUNLUA HUB",
-    Size = 15,
+local Status = Library.CreateLabel(Section, {
+    Text = "สถานะ: พร้อม",
     Bold = true,
+    Color = Library.Theme.Success,
 })
 
-Library:CreateParagraph(Main.Page, {
-    Text = "ตัวอย่างการใช้งาน UI Library",
+Library.CreateParagraph(Section, {
+    Text = "ตัวอย่างการใช้งาน UI Library ของ RUNLUA HUB",
 })
 
-Library:CreateButton(General, {
-    Name = "ทดสอบ",
-    Description = "กดเพื่อแสดง Notification",
+local ToggleRow, GetToggle, SetToggle = Library.CreateToggle(Section, {
+    Name = "เปิดระบบ",
+    Default = false,
+    Callback = function(enabled)
+        Status.Text = enabled and "สถานะ: เปิด" or "สถานะ: ปิด"
+    end,
+})
+
+Library.CreateButton(Section, {
+    Name = "แจ้งเตือน",
     Callback = function()
-        Library:Notify({
+        Library.Notify({
             Title = "RUNLUA HUB",
-            Message = "ทดสอบสำเร็จ",
+            Message = "นี่คือตัวอย่าง Notification",
             Duration = 3,
-            Color = Library.Theme.Success,
-            Icon = Library.Icons.Home,
         })
     end,
 })
 
-Library:CreateToggle(General, {
-    Name = "ระบบตัวอย่าง",
-    Description = "Toggle สำหรับระบบของคุณ",
-    Default = false,
-    Callback = function(enabled)
-        print("Enabled:", enabled)
-    end,
-})
-
-Library:CreateSlider(General, {
-    Name = "ค่า",
-    Min = 1,
+local SliderRow, GetNumber, SetNumber = Library.CreateSlider(Section, {
+    Name = "ค่าตัวอย่าง",
+    Min = 0,
     Max = 100,
-    Step = 1,
     Default = 50,
+    Step = 5,
+    Suffix = "%",
     Callback = function(value)
-        print("Value:", value)
+        print("Slider:", value)
     end,
 })
 
-Library:CreateDropdown(General, {
+local InputRow, GetInput, SetInput = Library.CreateInput(Section, {
+    Name = "ข้อความ",
+    Placeholder = "พิมพ์ข้อความ...",
+    Callback = function(value)
+        print("Input:", value)
+    end,
+})
+
+local DropdownRow, GetMode, SetMode = Library.CreateDropdown(Section, {
     Name = "โหมด",
-    Options = {"ปกติ", "เร็ว", "สูงสุด"},
+    Options = {"ปกติ", "เร็ว", "ประหยัด"},
     Default = "ปกติ",
     Callback = function(value)
         print("Mode:", value)
     end,
 })
+
+Library.CreateKeybind(Section, {
+    Name = "เรียกฟังก์ชันตัวอย่าง",
+    Default = Enum.KeyCode.G,
+    Callback = function(keyCode)
+        print("ทำงานจากคีย์:", keyCode.Name)
+        Library.Notify({
+            Title = "Keybind",
+            Message = "กด " .. keyCode.Name .. " แล้ว",
+            Duration = 2,
+        })
+    end,
+})
+
+-- เรียกเมื่อจำเป็นต้องแสดง UI อีกครั้ง
+-- Library.Show()
+
+-- เรียกเมื่ออยากล้าง UI ทั้งหมด
+-- Library.Destroy()
+```
+
+เปลี่ยน `RAW_URL_ของไฟล์ไลบรารี` เป็น Raw URL ของไฟล์ที่คุณโฮสต์ไว้จริง ห้ามใช้ข้อความตัวอย่างนี้ตรง ๆ
+
+---
+
+## ข้อควรทราบและการแก้ปัญหา
+
+**กดคีย์ลัดแล้วไม่ทำงาน**
+- ตรวจว่ากำลังใช้คีย์ที่ตั้งไว้จริง
+- Keybind ของฟังก์ชันทำงานเฉพาะ callback ที่ผูกกับ Keybind นั้น
+- Input ที่ Roblox/UI ประมวลผลแล้ว (`gameProcessed == true`) อาจถูกข้าม
+- ระบบ Keybind ในไฟล์นี้เป็นการกดคีย์บอร์ด จึงเหมาะกับ PC
+
+**เปลี่ยนคีย์ GUI แล้วไม่ได้**
+- ส่ง `Enum.KeyCode` เช่น `Enum.KeyCode.RightControl` ไม่ใช่ string `"RightControl"`
+- ตรวจผลลัพธ์จาก `Library.SetToggleKey(...)` ว่าเป็น `true`
+
+**UI หายไป**
+- `Library.Hide()` แค่ซ่อนหน้าต่างหลัก; `Library.Destroy()` ทำลาย ScreenGui
+- ถ้าทำลายแล้ว ต้องโหลด/สร้างไลบรารีใหม่
+
+**Save/Load ไม่ทำงาน**
+- ตรวจ `Library.Settings.GetStorageAvailable()`
+- การเข้าถึงไฟล์ขึ้นอยู่กับสภาพแวดล้อมที่ใช้รัน ไม่ใช่ทุกที่ที่รองรับ `isfile`, `readfile` หรือ `writefile`
+
+**ไอคอนไม่แสดง**
+- ตรวจว่าชื่อใน `Library.Icons` มีอยู่จริง
+- ไอคอนอาจต้องรอโหลด Asset; ผลลัพธ์ขึ้นกับการเข้าถึง asset และสภาพแวดล้อมที่รัน
+
+**Callback ของ Setter ไม่ทำงาน**
+- `SetToggle`, `SetSpeed`, `SetText` และ `SetChoice` ถูกออกแบบให้เปลี่ยนค่าของ UI โดยตรง; ในโค้ดปัจจุบัน setter เหล่านี้ไม่ได้เรียก callback ของคอมโพเนนต์ทุกตัวโดยอัตโนมัติ
+
+---
+
+## API Reference แบบย่อ
+
+```lua
+Library.CreateTab(opts)
+Library.CreateSection(parent, opts)
+Library.CreateDivider(parent, order)
+
+Library.CreateToggle(parent, opts)
+Library.CreateButton(parent, opts)
+Library.CreateSlider(parent, opts)
+Library.CreateInput(parent, opts)
+Library.CreateKeybind(parent, opts)
+Library.CreateDropdown(parent, opts)
+Library.CreateLabel(parent, opts)
+Library.CreateParagraph(parent, opts)
+Library.CreatePlayerList(parent, opts)
+
+Library.Notify(opts)
+Library.SelectTab(tab)
+Library.Show()
+Library.Hide()
+Library.Destroy()
+
+Library.SetToggleKey(Enum.KeyCode.RightShift)
+Library.GetToggleKey()
+
+Library.Settings.Get()
+Library.Settings.Save()
+Library.Settings.Load()
+Library.Settings.Reset()
+Library.Settings.Apply(data)
+Library.Settings.GetStorageAvailable()
+
+Library.Theme
+Library.Config
+Library.Icons
+Library.IsMobile
+Library.Platform
+Library.ScreenGui
+Library.MainFrame
+Library.SettingsTab
 ```
 
 ---
 
-# 📚 API Reference
-
-| API | หน้าที่ |
-|---|---|
-| `CreateTab` | สร้างแท็บ |
-| `CreateSection` | สร้าง Section |
-| `CreateDivider` | สร้างเส้นแบ่ง |
-| `CreateToggle` | สร้าง Toggle |
-| `CreateButton` | สร้าง Button |
-| `CreateSlider` | สร้าง Slider |
-| `CreateInput` | สร้างช่องข้อความ |
-| `CreateKeybind` | สร้าง Keybind |
-| `CreateDropdown` | สร้าง Dropdown |
-| `CreateLabel` | สร้างข้อความ |
-| `CreateParagraph` | สร้างข้อความหลายบรรทัด |
-| `CreatePlayerList` | สร้างรายการผู้เล่น |
-| `Notify` | แจ้งเตือน |
-| `SelectTab` | เลือกแท็บ |
-| `Show` | แสดง UI |
-| `Hide` | ซ่อน UI |
-| `Destroy` | Cleanup และปิด UI |
-| `Settings.Get` | อ่าน Settings |
-| `Settings.Save` | บันทึก Settings |
-| `Settings.Load` | โหลด Settings |
-| `Settings.Reset` | รีเซ็ต Settings |
-| `Settings.Apply` | ใช้ Settings |
-| `Settings.GetStorageAvailable` | ตรวจสอบ File Storage |
-
----
-
-## 📌 GitHub Raw URL
-
-```text
-https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua
-```
-
-## ❤️ RUNLUA HUB
-
-UI Library สำหรับโปรเจกต์ RUNLUA HUB — ออกแบบให้ใช้งานซ้ำได้ง่าย ดูเป็นระบบ และดูแลต่อบน GitHub ได้สะดวก
+**RUNLUA HUB UI Library**  
+README นี้อธิบายตาม API ที่เปิดเผยในไฟล์ `UILibrary_Fixed_PC_Keybind_Drag.lua` หากมีการแก้ซอร์สหรือเปลี่ยนชื่อฟังก์ชัน ควรอัปเดตเอกสารให้ตรงกับไฟล์เวอร์ชันนั้นด้วย
