@@ -11,7 +11,7 @@
 ตัวอย่างรูปแบบการโหลดจาก URL ที่โฮสต์ไฟล์ไว้แล้ว:
 
 ```lua
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/RUNLUA_HUB_V2.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"))()
 ```
 
 เปลี่ยน URL เป็นที่อยู่จริงของไฟล์ที่คุณโฮสต์ ไลบรารีจะคืนค่าเป็นตาราง Library และกำหนด _G.RUNLUA_HUB ไว้ด้วย หากโหลดซ้ำ ระบบจะเรียก _G.RUNLUA_HUB_CLEANUP เพื่อล้าง UI เก่าก่อนโดยอัตโนมัติ
@@ -21,7 +21,7 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLU
 2. เริ่มต้นสร้าง UI
 
 ```lua
-local Library = loadstring(game:HttpGet("URL_ไฟล์ไลบรารี"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua"))()
 
 local tab = Library.CreateTab({
     Name = "หน้าหลัก",
