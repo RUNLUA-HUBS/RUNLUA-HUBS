@@ -57,7 +57,7 @@ local Library = loadstring(game:HttpGet(
 ### ตัวอย่างเริ่มต้น
 
 ```lua
-local Library = loadstring(game:HttpGet("URL_ของไฟล์ไลบรารี"))()
+local Library = loadstring(game:HttpGet("[URL_ของไฟล์ไลบรารี](https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/UI%20Library/UILibrary.lua)"))()
 
 local mainTab = Library.CreateTab({
     Name = "หน้าหลัก",
