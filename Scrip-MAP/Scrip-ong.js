@@ -14,6 +14,10 @@ const rawData = [
                 url: "https://www.roblox.com/th/games/10449761463/The-Strongest-Battlegrounds"
             },
             {
+                name: "[Treatment] Severity Zone : [รักษา] เขตความรุนแรง",
+                url: "https://www.roblox.com/th/games/93978595733734/Violence-District"
+            },
+            {
                 name: "Steal An Egg : ขโมยไข่",
                 url: "https://www.roblox.com/th/games/107778070777162/Steal-An-Egg"
             },
