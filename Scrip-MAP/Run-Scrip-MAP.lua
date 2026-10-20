@@ -19,6 +19,11 @@ local games = {
         ShortName = "สนามรบ",
         URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/The%20strongest%20battlefield/12.lua"
     },
+    ["93978595733734"] = {
+        Name = "[Treatment] Severity Zone",
+        ShortName = "[รักษา] เขตความรุนแรง",
+        URL = "https://raw.githubusercontent.com/RUNLUA-HUBS/RUNLUA-HUBS/refs/heads/main/Scrip-MAP/%5BTreatment%5D%20Severity%20Zone/same.lua"
+    },
     ["107778070777162"] = {
         Name = "Steal An Egg",
         ShortName = "ขโมยไข่",
